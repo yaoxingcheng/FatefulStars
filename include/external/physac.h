@@ -103,8 +103,8 @@
 //----------------------------------------------------------------------------------
 // Defines and Macros
 //----------------------------------------------------------------------------------
-#define PHYSAC_MAX_BODIES               64          // Maximum number of physic bodies supported
-#define PHYSAC_MAX_MANIFOLDS            4096        // Maximum number of physic bodies interactions (64x64)
+#define PHYSAC_MAX_BODIES               256          // Maximum number of physic bodies supported
+#define PHYSAC_MAX_MANIFOLDS            68000        // Maximum number of physic bodies interactions (64x64)
 #define PHYSAC_MAX_VERTICES             24          // Maximum number of vertex for polygons shapes
 #define PHYSAC_DEFAULT_CIRCLE_VERTICES  24          // Default number of vertices for circle shapes
 

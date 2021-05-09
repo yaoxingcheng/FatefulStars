@@ -10,6 +10,8 @@ InputController::~InputController() {
 void InputController::Update() {
     if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
         energy ++;
+    } else {
+        energy = max(0, energy - 2);
     }
 }
 

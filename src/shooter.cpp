@@ -9,6 +9,11 @@ using namespace std;
 
 Shooter::Shooter(Game* game, ShooterPosition pos, float ball_radius, float ball_dense) : game(game), pos(pos), ball_radius(ball_radius), ball_dense(ball_dense) {
     holded_body = NULL;
+    int L = std::min(game->screenWidth, game->screenHeight);
+    float cx = 0.5f * L;
+    float cy = (pos == UP ? 0.065f : 0.935f) * L;
+    shooter_body = CreatePhysicsBodyCircle((Vector2){cx, cy}, game->shooter_radius, game->shooter_dense);
+    shooter_body->enabled = false;
 }
 
 Shooter::~Shooter() {
@@ -35,7 +40,6 @@ Vector2 Shooter::getHoldPosition() {
 void Shooter::createNewBody() {
     float cx = getX();
     float cy = getY();
-    cout << "created body at " << cx << ", " << cy << endl;
     holded_body = CreatePhysicsBodyPolygon((Vector2){cx, cy}, ball_radius, GetRandomValue(3, 8), ball_dense);
     holded_body->enabled = false;
 }
@@ -52,18 +56,21 @@ void AddLocalGravity(PhysicsBody body, PhysicsBody anchor, float force){
 
 void Shooter::Update() {
     if (pos == DOWN && !game->IsMultiPlayer()) return;
+    float cx = getX();
+    float cy = getY();
+    shooter_body->position = (Vector2){cx, cy};
     UpdatePhysics(); 
     if (holded_body == NULL) createNewBody();
     if (pos == UP) {
         InputController* input = game->GetInput();
         input->SetEnergy(std::min(input->GetEnergy(), 500));
         int energy = input->GetEnergy();
-        if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
+        if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
             PhysicsBody body = GetPhysicsBodyByID(holded_body->id);
             Planet* planet = game->GetPlanet();
             body->enabled = true;
             float velocity_direction = pos == UP ? 1 : -1;
-            body->position.y += 0.1 * velocity_direction;
+            body->position.y += (game->shooter_radius + 0.1) * velocity_direction;
             body->velocity = (Vector2){0, velocity_direction * sqrtf(float(energy) * body->inverseMass)};
             AddLocalGravity(body, planet->GetBody(), game->pull_coef);
             createNewBody();
@@ -76,13 +83,10 @@ void Shooter::destroyBody() {
     int planet_id = game->GetPlanet()->GetID();
     // Destroy physics bodies that out of boundary
     int bodiesCount = GetPhysicsBodiesCount();
-    for (int i = bodiesCount - 1; i >= 0; i--)
-        if (i != planet_id) {
+    for (int i = bodiesCount - 1; i >= 0; i--) {
             PhysicsBody body = GetPhysicsBody(i);
+            if (!body->enabled) continue;
             bool out_of_box = (body->position.y > game->screenHeight*2 || body->position.y < -1*game->screenHeight || body->position.x > game->screenWidth*2 || body->position.x < game->screenWidth * -1);
-            if (out_of_box) {
-                cout << "out of box !!!!! " << body->position.x << ", " << body->position.y << endl;
-            }
             if (body != NULL && out_of_box) DestroyPhysicsBody(body);
         }
 
@@ -94,7 +98,7 @@ void Shooter::drawBody() {
     int bodiesCount = GetPhysicsBodiesCount();
     for (int i = 0; i < bodiesCount; i++) {
             PhysicsBody body = GetPhysicsBody(i);
-            if (body->id == planet_id) continue;
+            if (!body->enabled && body->id != holded_body->id) continue;
             if (body->id == holded_body->id) body->position = getHoldPosition();
             if (body != NULL)
             {
@@ -108,7 +112,7 @@ void Shooter::drawBody() {
                     int jj = (((j + 1) < vertexCount) ? (j + 1) : 0);   // Get next vertex or first to close the shape
                     Vector2 vertexB = GetPhysicsShapeVertex(body, jj);
 
-                    DrawLineV(vertexA, vertexB, DARKBLUE);     // Draw a line between two vertex positions
+                    DrawLineEx(vertexA, vertexB, 3, DARKBLUE);     // Draw a line between two vertex positions
                 }
             }
         }
@@ -120,11 +124,9 @@ void Shooter::Draw() {
     int L = std::min(game->screenWidth, game->screenHeight);
 
     InputController* input = game->GetInput();
-    float cx = pos == UP ? input->GetCursorX() : 0.5f * L;
-    float startY = (pos == UP ? 0.03f : 0.97f) * L;
-    float endY = (pos == UP ? 0.1f : 0.9f) * L;
-    DrawLineEx((Vector2){cx - 0.1f * L, startY}, (Vector2){cx - 0.02f * L, endY}, 3, BLACK);
-    DrawLineEx((Vector2){cx + 0.1f * L, startY}, (Vector2){cx + 0.02f * L, endY}, 3, BLACK);
+    float cx = getX();
+    float cy = getY();
+    DrawCircleV((Vector2){cx, cy}, game->shooter_radius, VIOLET);
     drawBody();
 
     if (pos == UP) {
