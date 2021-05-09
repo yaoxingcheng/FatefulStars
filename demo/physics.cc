@@ -16,6 +16,15 @@
 #define PHYSAC_IMPLEMENTATION
 #include "../headers/physac.h"
 
+void AddLocalGravity(PhysicsBody body, PhysicsBody anchor, float force){
+    if (body != NULL && anchor != NULL){
+        body->useGravity = false;
+        body->useLocalGravity = true;
+        body->anchor = anchor->position;
+        body->anchorForce = force;
+    }
+    else TRACELOG("[PHYSAC] WARNING: PhysicsShatter: NULL physic body or Anchor\n");
+}
 int main(void)
 {
     // Initialization
@@ -34,11 +43,11 @@ int main(void)
     InitPhysics();
 
     // Create floor rectangle physics body
-    PhysicsBody floor = CreatePhysicsBodyRectangle((Vector2){ screenWidth/2, screenHeight }, 500, 100, 10);
-    floor->enabled = false;         // Disable body state to convert it to static (no dynamics, but collisions)
+    // PhysicsBody floor = CreatePhysicsBodyRectangle((Vector2){ screenWidth/2, screenHeight }, 500, 100, 10);
+    // floor->enabled = false;         // Disable body state to convert it to static (no dynamics, but collisions)
 
     // Create obstacle circle physics body
-    PhysicsBody circle = CreatePhysicsBodyCircle((Vector2){ screenWidth/2, screenHeight/2 }, 45, 10);
+    PhysicsBody circle = CreatePhysicsBodyCircle((Vector2){ screenWidth/2, screenHeight/2 }, 45, 100);
     circle->enabled = false;        // Disable body state to convert it to static (no dynamics, but collisions)
 
     SetTargetFPS(60);               // Set our game to run at 60 frames-per-second
@@ -55,16 +64,25 @@ int main(void)
         {
             ResetPhysics();
             
-            floor = CreatePhysicsBodyRectangle((Vector2){ screenWidth/2, screenHeight }, 500, 100, 10);
-            floor->enabled = false;
+            // floor = CreatePhysicsBodyRectangle((Vector2){ screenWidth/2, screenHeight }, 500, 100, 10);
+            // floor->enabled = false;
 
-            circle = CreatePhysicsBodyCircle((Vector2){ screenWidth/2, screenHeight/2 }, 45, 10);
+            circle = CreatePhysicsBodyCircle((Vector2){ screenWidth/2, screenHeight/2 }, 45, 100);
             circle->enabled = false;
         }
 
         // Physics body creation inputs
-        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) CreatePhysicsBodyPolygon(GetMousePosition(), GetRandomValue(20, 80), GetRandomValue(3, 8), 10);
-        else if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) CreatePhysicsBodyCircle(GetMousePosition(), GetRandomValue(10, 45), 10);
+        if (IsMouseButtonPressed(MOUSE_LEFT_BUTTON)) 
+        {
+            PhysicsBody body = CreatePhysicsBodyPolygon(GetMousePosition(), GetRandomValue(20, 80), GetRandomValue(3, 8), 10);
+            AddLocalGravity(body, circle, 1);
+
+        }
+        else if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) 
+        {
+            PhysicsBody body = CreatePhysicsBodyCircle(GetMousePosition(), GetRandomValue(10, 45), 10);
+            AddLocalGravity(body, circle, 1);
+        }
 
         // Destroy falling physics bodies
         int bodiesCount = GetPhysicsBodiesCount();
