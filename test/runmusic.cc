@@ -11,7 +11,7 @@ int main(void)
 
     InitAudioDevice();              // Initialize audio device
 
-    Music music = LoadMusicStream("resour/country.mp3");
+    Music music = LoadMusicStream("resour/ct.mp3");
 
     PlayMusicStream(music);
 

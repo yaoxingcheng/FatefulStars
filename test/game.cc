@@ -15,14 +15,18 @@ main(void)
 
     SetTargetFPS(60);
 
-    InitAudioDevice();
-    Music must = LoadMusicStream("resour/ct.mp3"); 
-    PlayMusicStream(must);
+    // InitAudioDevice();
+    // Music must = LoadMusicStream("resour/ct.mp3"); 
+    // PlayMusicStream(must);
+    InitAudioDevice();              // Initialize audio device
+    Music music = LoadMusicStream("resour/sb.mp3");
+    PlayMusicStream(music);
 
     //Main game loop
     //Detect window close button or ESC key
     while (!WindowShouldClose()) 
     {
+        UpdateMusicStream(music);
         g->UpdateGame();
         g->DrawGame();
     }
