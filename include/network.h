@@ -35,6 +35,8 @@ public:
     void StartServer(int port);
     void StartClient(std::string host, int port);
     
+    bool IsConnected();
+    
 private:
     Game* game;
     Button* mainBtn;

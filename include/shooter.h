@@ -11,12 +11,14 @@ public:
     Shooter(Game* game, ShooterPosition pos);
     ~Shooter();
 
+    void SetCursorX(int);
     void Update();
     void Draw();
 
 private:
     Game* game;
     ShooterPosition pos;
+    int cursorX;
 };
 
 #endif

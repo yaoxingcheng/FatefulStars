@@ -60,7 +60,7 @@ void Game::DrawGame(void) {
 }
 
 bool Game::IsMultiPlayer(void) {
-    return true;
+    return networkManager->IsConnected();
 }
 
 void Game::SetScene(Scene newScene) {
@@ -73,4 +73,12 @@ Scene Game::GetScene() {
 
 InputController* Game::GetInput(void) {
     return input;
+}
+
+void Game::LoadState(const GameState *state) {
+    oppositeShooter->SetCursorX(state->cursorX);
+}
+
+void Game::DumpState(GameState *state) {
+    state->cursorX = input->GetCursorX();
 }

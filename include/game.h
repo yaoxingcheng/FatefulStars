@@ -2,6 +2,7 @@
 #define __GAME_H__
 
 #include "raylib.h"
+#include "game_state.h"
 
 class Planet;
 class Shooter;
@@ -35,6 +36,9 @@ public:
 
     Scene GetScene();
     void SetScene(Scene);
+
+    void DumpState(GameState *state);
+    void LoadState(const GameState *state);
 
 private:
     Scene scene;

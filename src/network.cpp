@@ -241,8 +241,25 @@ void NetworkManager::StartClient(string host, int port) {
     connectThread->detach();
 }
 
+#include "game_state.h"
+
 void NetworkManager::startCoummunication(int sockfd) {
     status = CONNECTED;
-    game->SetScene(MAIN)
+    game->SetScene(MAIN);
 
+    GameState* state = new GameState();
+    int len = sizeof(GameState);
+    while (true) {
+        game->DumpState(state);
+        write(sockfd, state, len);
+
+        if (read(sockfd, state, len) == len) {
+            game->LoadState(state);
+        }
+        usleep(10 * 1000);
+    }
+}
+
+bool NetworkManager::IsConnected() {
+    return status == CONNECTED;
 }
