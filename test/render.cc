@@ -64,6 +64,29 @@ void Game::DrawGame(void)
     Rectangle rec = {150,150,50,50};
     DrawRectangleGradientEx(rec,RED,GREEN,BLUE,VIOLET);
 
+    static Image ti2 = LoadImage("resour/big.png");
+    static int vis=0;
+    // static Texture2D tt;
+    if (!vis){
+        vis=1;
+        ImageResize(&ti2,400,200);
+        // ImageMipmaps(&ti2);
+        // tt = LoadTextureFromImage(ti);   
+    }
+
+    Image ti = ImageCopy(ti2);
+    // ImageResize(&ti,400,200);
+    // ImageMipmaps(&ti);
+    Texture2D tt = LoadTextureFromImage(ti);   
+
+    // Texture2D ring_tex = LoadTexture("resour/ring.jpeg");
+    // DrawTexture(tt,300,100,VIOLET);
+    static float rot = 0;
+    // DrawTextureEx(tt,{300,100},rot,1,WHITE);
+    float wi = tt.width, he = tt.height;
+    DrawTexturePro(tt,{0.,0.,wi,he},{100,100,100+wi,100+he},{wi/2,he/2},rot,CLITERAL(Color){ 255, 255, 255, 50 });
+    rot += 5;
+
     EndDrawing();
 }
 
