@@ -153,7 +153,7 @@ void Shooter::drawBody() {
 void Shooter::drawShooter() {
     float cx = getX();
     float cy = getY();
-    DrawTextureEx(texture, (Vector2){cx - texture.width / 2.0f + (pos == UP ? 0 : texture.width), pos == UP ? 0 : game->screenHeight}, pos == UP ? 0 : 180, 1, WHITE);
+    DrawTextureEx(texture, (Vector2){cx - texture.width / 2.0f + (pos == UP ? 0 : texture.width), pos == UP ? 0.0f : 1.0f * game->screenHeight}, pos == UP ? 0 : 180, 1, WHITE);
 }
 
 void Shooter::drawText() {
