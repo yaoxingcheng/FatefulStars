@@ -180,6 +180,7 @@ typedef struct PhysicsBodyData {
     bool useLocalGravity;
     Vector2 anchor;
     float anchorForce;
+    float anchorMass;
 } PhysicsBodyData;
 
 typedef struct PhysicsManifoldData {

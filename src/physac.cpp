@@ -2,6 +2,7 @@
 #include "physac.h"
 
 // Support TRACELOG macros
+#define PHYSAC_DEBUG
 #if defined(PHYSAC_DEBUG)
     #include <stdio.h>              // Required for: printf()
     #define TRACELOG(...) printf(__VA_ARGS__)
@@ -1276,20 +1277,25 @@ static void SolvePolygonToPolygon(PhysicsManifold manifold)
 static void IntegratePhysicsForces(PhysicsBody body)
 {
     if ((body == NULL) || (body->inverseMass == 0.0f) || !body->enabled) return;
+    Vector2 forceDirection;
     if (body->useLocalGravity)
     {
-        Vector2 forceDirection = MathVector2Subtract(body->anchor, body->position);
-        forceDirection.x *= body->anchorForce;
-        forceDirection.y *= body->anchorForce;
+        forceDirection = MathVector2Subtract(body->anchor, body->position);
+        float distance = MathVector2SqrLen(forceDirection);
+        float force = body->mass * body->anchorMass / distance;
+        // printf("distance %f, force %f, mass %f, %f\n", distance, force, body->mass, body->anchorMass);
+        MathVector2Normalize(&forceDirection);
+
+        forceDirection.x *= body->anchorForce * force;
+        forceDirection.y *= body->anchorForce * force;
         PhysicsAddForce(body, forceDirection);
     }
     body->velocity.x += (float)((body->force.x*body->inverseMass)*(deltaTime/2.0));
     body->velocity.y += (float)((body->force.y*body->inverseMass)*(deltaTime/2.0));
     if (body->useLocalGravity)
     {
-        Vector2 forceDirection = MathVector2Subtract(body->anchor, body->position);
-        forceDirection.x *= body->anchorForce;
-        forceDirection.y *= body->anchorForce;
+        forceDirection.x *= -1;
+        forceDirection.y *= -1;
         PhysicsAddForce(body, forceDirection);
     }
     if (body->useGravity)

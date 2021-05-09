@@ -2,6 +2,7 @@
 #define __GAME_H__
 
 #include "raylib.h"
+
 #include "physac.h"
 
 class Planet;
@@ -11,10 +12,12 @@ class NetworkManager;
 
 class Game {
 public:
-    static const int screenWidth = 800;
-    static const int screenHeight = 800;
-    static constexpr float ball_radius = 5.0;
+    static const int screenWidth = 600;
+    static const int screenHeight = 600;
+    static constexpr float ball_radius = 10.0;
     static constexpr float ball_dense = 10.0;
+
+    static constexpr float pull_coef = 1e-5;
 
     int framesCounter;
     bool gameOver;

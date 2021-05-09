@@ -46,6 +46,7 @@ void AddLocalGravity(PhysicsBody body, PhysicsBody anchor, float force){
         body->useGravity = false;
         body->useLocalGravity = true;
         body->anchor = anchor->position;
+        body->anchorMass = anchor->mass;
         body->anchorForce = force;
     }
 }
@@ -63,8 +64,9 @@ void Shooter::Update() {
             Planet* planet = game->GetPlanet();
             body->enabled = true;
             float velocity_direction = pos == UP ? 1 : -1;
+            body->position.y += 0.075 * velocity_direction;
             body->velocity = (Vector2){0, velocity_direction * sqrtf(float(energy) * body->inverseMass)};
-            AddLocalGravity(body, planet->GetBody(), 1);
+            AddLocalGravity(body, planet->GetBody(), game->pull_coef);
             createNewBody();
         }
         if (holded_body_id == -1) createNewBody();
