@@ -19,14 +19,24 @@ main(void)
     // Music must = LoadMusicStream("resour/ct.mp3"); 
     // PlayMusicStream(must);
     InitAudioDevice();              // Initialize audio device
-    Music music = LoadMusicStream("resour/sb.mp3");
-    PlayMusicStream(music);
+    // Wave wave = LoadWave("resour/mc.mp3");
+    // Sound sound = LoadSoundFromWave(wave);
+    Sound sound = LoadSound("resour/posui.mp3");
+    PlaySoundMulti(sound);
+    // Music music = LoadMusicStream("resour/posui.mp3");
+    // PlayMusicStream(music);
+    Music music2 = LoadMusicStream("resour/zhuangji.mp3");
+    PlayMusicStream(music2);
 
     //Main game loop
     //Detect window close button or ESC key
     while (!WindowShouldClose()) 
     {
-        UpdateMusicStream(music);
+        // if (!IsSoundPlaying(sound)) PlaySound(sound);
+        static int i=0;
+        if (++i %10 ==0 ) PlaySoundMulti(sound);
+        // UpdateMusicStream(music);
+        // UpdateMusicStream(music2);
         g->UpdateGame();
         g->DrawGame();
     }
