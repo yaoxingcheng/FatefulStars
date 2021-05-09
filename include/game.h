@@ -2,6 +2,7 @@
 #define __GAME_H__
 
 #include "raylib.h"
+#include "game_state.h"
 
 #include "physac.h"
 
@@ -12,6 +13,11 @@ class Planet;
 class Shooter;
 class InputController;
 class NetworkManager;
+
+enum Scene {
+    MAIN,
+    NETWORK_SETTINGS,
+};
 
 class Game {
 public:
@@ -39,7 +45,15 @@ public:
     InputController* GetInput(void);
     Planet* GetPlanet(void);
     
+
+    Scene GetScene();
+    void SetScene(Scene);
+
+    void DumpState(GameState *state);
+    void LoadState(const GameState *state);
+
 private:
+    Scene scene;
     Planet* planet;
     Shooter* shooter;
     Shooter* oppositeShooter;

@@ -11,6 +11,7 @@ public:
     Shooter(Game* game, ShooterPosition pos, float ball_radius, float ball_dense);
     ~Shooter();
 
+    void SetCursorX(int);
     void Update();
     void Draw();
 
@@ -27,6 +28,7 @@ private:
     void destroyBody();
     void drawBody();
     Vector2 getHoldPosition();
+    int cursorX;
 };
 
 #endif

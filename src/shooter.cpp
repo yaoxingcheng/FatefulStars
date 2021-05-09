@@ -5,6 +5,7 @@
 #include "input.h"
 #include "planet.h"
 #include <iostream>
+#include <cmath>
 using namespace std;
 
 Shooter::Shooter(Game* game, ShooterPosition pos, float ball_radius, float ball_dense) : game(game), pos(pos), ball_radius(ball_radius), ball_dense(ball_dense) {
@@ -59,13 +60,6 @@ void AddLocalGravity(PhysicsBody body, PhysicsBody anchor, float force){
 void Shooter::Update() {
     UpdatePhysics();
     if (pos == DOWN && !game->IsMultiPlayer()) return;
-<<<<<<< HEAD
-    float cx = getX();
-    float cy = getY();
-    shooter_body->position = (Vector2){cx, cy};
-    UpdatePhysics(); 
-=======
->>>>>>> 80467b9108dd342b7527e618c523431416521f03
     if (holded_body == NULL) createNewBody();
     if (pos == UP) {
         InputController* input = game->GetInput();
@@ -134,12 +128,17 @@ void Shooter::Draw() {
     int L = std::min(game->screenWidth, game->screenHeight);
 
     InputController* input = game->GetInput();
-    float cx = getX();
-    float cy = getY();
-    DrawCircleV((Vector2){cx, cy}, game->shooter_radius, VIOLET);
-    drawBody();
+    float cx = pos == UP ? input->GetCursorX() : cursorX;
+    float startY = (pos == UP ? 0.03f : 0.97f) * L;
+    float endY = (pos == UP ? 0.1f : 0.9f) * L;
+    DrawLineEx((Vector2){cx - 0.1f * L, startY}, (Vector2){cx - 0.02f * L, endY}, 3, WHITE);
+    DrawLineEx((Vector2){cx + 0.1f * L, startY}, (Vector2){cx + 0.02f * L, endY}, 3, WHITE); 
 
     if (pos == UP) {
-        DrawText(std::to_string(input->GetEnergy()).c_str(), 0.88f * L, 0.02f * L, 48, BLACK);
+        DrawText(std::to_string(input->GetEnergy()).c_str(), 0.02f * L, 0.02f * L, 48, WHITE);
     }
+}
+
+void Shooter::SetCursorX(int value) {
+    cursorX = value;
 }

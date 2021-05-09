@@ -3,5 +3,5 @@
 *.a
 *.sh
 /game
-Makefile
 .vscode/
+Makefile
