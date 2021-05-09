@@ -19,7 +19,9 @@ Shooter::Shooter(Game* game, ShooterPosition pos, float ball_radius, float ball_
     cursorX = int(0.5f * L);
     energy = 0;
     released = 0;
-    next_sides = GetRandomValue(game->min_sides, game->max_sides);
+    num_sides = GetRandomValue(game->min_sides, game->max_sides);
+    current_shot = 0;
+    num_shot = 0;
 }
 
 Shooter::~Shooter() {
@@ -46,11 +48,12 @@ Vector2 Shooter::getHoldPosition() {
 void Shooter::createNewBody() {
     float cx = getX();
     float cy = getY();
-    holded_body = CreatePhysicsBodyPolygon((Vector2){cx, cy}, ball_radius, next_sides, ball_dense);
-    if (pos == UP) next_sides = GetRandomValue(game->min_sides, game->max_sides);
+    if (pos == UP) num_sides = GetRandomValue(game->min_sides, game->max_sides);
+    holded_body = CreatePhysicsBodyPolygon((Vector2){cx, cy}, ball_radius, num_sides, ball_dense);
     holded_body->enabled = false;
     holded_body->breakable = false;
     holded_body->holded = true;
+    current_shot ++;
 }
 
 void AddLocalGravity(PhysicsBody body, PhysicsBody anchor, float force){
@@ -68,20 +71,20 @@ void Shooter::Update() {
     float cx = getX();
     float cy = getY();
     shooter_body->position = (Vector2){cx, cy};
-    UpdatePhysics(); 
+    if (pos == UP) UpdatePhysics(); 
     if (holded_body == NULL) createNewBody();
     InputController* input = game->GetInput();
     if (pos == UP) input->SetEnergy(std::min(input->GetEnergy(), 500));
     int last_energy = pos == UP ? input->GetEnergy():energy;
-    int is_released = pos == UP ? IsMouseButtonReleased(MOUSE_LEFT_BUTTON):released;
+    if (pos == UP) energy = last_energy;
+    int is_released = pos == UP ? IsMouseButtonReleased(MOUSE_LEFT_BUTTON): int(num_shot > current_shot);
     if (is_released != 0) {
         PhysicsBody body = GetPhysicsBodyByID(holded_body->id);
         Planet* planet = game->GetPlanet();
         body->enabled = true;
         float velocity_direction = pos == UP ? 1 : -1;
-        body->position.y += (game->shooter_radius + 0.1) * velocity_direction;
-        body->velocity = (Vector2){0, velocity_direction * sqrtf(float(energy) * body->inverseMass)};
-        std::cout<<"if this holded body is breakable: "<<body->breakable<<std::endl;
+        body->position.y += (game->shooter_radius + game->ball_radius + 0.1) * velocity_direction;
+        body->velocity = (Vector2){0, velocity_direction * (float(last_energy) * game->velocity_coef)};
         AddLocalGravity(body, planet->GetBody(), game->pull_coef);
         createNewBody();
 
@@ -111,9 +114,12 @@ void Shooter::drawBody() {
     for (int i = 0; i < bodiesCount; i++) {
             PhysicsBody body = GetPhysicsBody(i);
             if (!body->enabled && body->id != holded_body->id) continue;
-            if (body->id == holded_body->id) body->position = getHoldPosition();
+            if (body->id == holded_body->id) {
+                body->position = getHoldPosition();
+            }
             if (body != NULL)
             {
+                if (pos != UP && body->id != holded_body->id) continue;
                 int vertexCount = GetPhysicsShapeVerticesCount(i);
                 for (int j = 0; j < vertexCount; j++)
                 {
@@ -149,7 +155,7 @@ void Shooter::drawText() {
 void Shooter::Draw() {
     if (pos == DOWN && !game->IsMultiPlayer()) return;
     drawShooter();
-    if (pos == UP) drawBody();
+    drawBody();
     drawText();
 }
 
@@ -161,10 +167,10 @@ void Shooter::SetEnergy(int value) {
     energy = value;
 }
 
-void Shooter::SetReleased(int value) {
-    released = value;
+void Shooter::SetNumShot(int value) {
+    num_shot = value;
 }
 
-void Shooter::SetNextSides(int value) {
-    next_sides = value;
+void Shooter::SetNumSides(int value) {
+    num_sides = value;
 }

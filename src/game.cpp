@@ -29,15 +29,27 @@ void Game::InitGame(void) {
     networkManager->Init();
 }
 
+//Reset Game
+void Game::ResetGame(void) {
+    ResetPhysics();
+    planet = new Planet(this);
+    shooter = new Shooter(this, UP, ball_radius, ball_dense);
+    oppositeShooter = new Shooter(this, DOWN, ball_radius, ball_dense);
+    input = new InputController(this);
+}
+
 // Update game per frame
 void Game::UpdateGame(void) {
     if (!gameOver) {
         framesCounter ++;
-        input->Update();
+        if (scene == MAIN){
+            input->Update();
+            planet->Update();
+            shooter->Update();
+            oppositeShooter->Update();
+        }
+
         networkManager->Update();
-        planet->Update();
-        shooter->Update();
-        oppositeShooter->Update();
     }
 }
 
@@ -82,14 +94,14 @@ Planet* Game::GetPlanet(void) {
 void Game::LoadState(const GameState *state) {
     oppositeShooter->SetCursorX(state->cursorX);
     oppositeShooter->SetEnergy(state->energy);
-    oppositeShooter->SetReleased(state->relased);
-    oppositeShooter->SetNextSides(state->next_sides);
+    oppositeShooter->SetNumShot(state->num_shot);
+    oppositeShooter->SetNumSides(state->next_sides);
 }
 
 void Game::DumpState(GameState *state) {
     state->finished = !networkManager->IsConnected();
     state->cursorX = input->GetCursorX();
-    state->energy = input->GetEnergy();
-    state->relased = int(IsMouseButtonReleased(MOUSE_LEFT_BUTTON));
-    state->next_sides = shooter->GetNextSides();
+    state->energy = shooter->GetEnergy();
+    state->num_shot = shooter->GetCurrentShot();
+    state->next_sides = shooter->GetNumSides();
 }

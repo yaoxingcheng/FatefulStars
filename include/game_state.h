@@ -4,7 +4,7 @@
 struct GameState {
     int cursorX;
     int energy;
-    int relased; 
+    int num_shot; 
     int next_sides;
     bool finished;
 };

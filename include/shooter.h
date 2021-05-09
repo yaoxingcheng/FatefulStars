@@ -12,13 +12,23 @@ public:
     ~Shooter();
 
     void SetCursorX(int);
-    void SetNextSides(int);
+    void SetNumSides(int);
+    void SetNumShot(int);
     void SetEnergy(int);
     void SetReleased(int);
     void Update();
     void Draw();
-    int GetNextSides(){
-        return next_sides;
+    int GetNumSides(){
+        return num_sides;
+    }
+    int GetNumShot(){
+        return num_shot;
+    }
+    int GetCurrentShot(){
+        return current_shot;
+    }
+    int GetEnergy(){
+        return energy;
     }
 
 private:
@@ -39,7 +49,9 @@ private:
     int cursorX;
     int energy;
     int released;
-    int next_sides;
+    int num_shot;
+    int num_sides;
+    int current_shot;
 };
 
 #endif

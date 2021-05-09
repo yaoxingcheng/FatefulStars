@@ -245,8 +245,8 @@ void NetworkManager::StartClient(string host, int port) {
 
 void NetworkManager::startCoummunication(int sockfd) {
     status = CONNECTED;
+    game->ResetGame();
     game->SetScene(MAIN);
-
     GameState* state = new GameState();
     int len = sizeof(GameState);
 

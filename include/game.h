@@ -30,6 +30,7 @@ public:
     static constexpr float shooter_radius = 35.0;
     static constexpr float shooter_dense = 10.0;
     static constexpr float pull_coef = 1e-5;
+    static constexpr float velocity_coef = 1e-3;
 
     int framesCounter;
     bool gameOver;
@@ -38,6 +39,7 @@ public:
     ~Game();
 
     void InitGame(void);         // Initialize game
+    void ResetGame(void);
     void UpdateGame(void);       // Update game (one frame)
     void DrawGame(void);         // Draw game (one frame)
     void UnloadGame(void);       // Unload game
