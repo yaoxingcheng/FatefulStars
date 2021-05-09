@@ -60,6 +60,10 @@ void Game::DrawGame(void)
     // DrawGrid(10, 1.0f); //Draw a grid
     // EndMode3D();
 
+    DrawCircleGradient(100,100,50,BLACK,BLANK);
+    Rectangle rec = {150,150,50,50};
+    DrawRectangleGradientEx(rec,RED,GREEN,BLUE,VIOLET);
+
     EndDrawing();
 }
 
