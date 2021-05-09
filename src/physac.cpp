@@ -468,6 +468,31 @@ PHYSACDEF int GetPhysicsBodiesCount(void)
 }
 
 // Returns a physics body of the bodies pool at a specific index
+PHYSACDEF PhysicsBody GetPhysicsBodyByID(int index)
+{
+    PhysicsBody body = NULL;
+    int id = -1;
+    for (unsigned int i = 0; i < physicsBodiesCount; i++)
+    {
+        if (bodies[i]->id == index)
+        {
+            id = i;
+            break;
+        }
+    }
+
+    if (id >= 0)
+    {
+        body = bodies[id];
+
+        if (body == NULL) TRACELOG("[PHYSAC] WARNING: GetPhysicsBody: NULL physic body\n");
+    }
+    else TRACELOG("[PHYSAC] WARNING: Physic body index is out of bounds\n");
+
+    return body;
+}
+
+// Returns a physics body of the bodies pool at a specific index
 PHYSACDEF PhysicsBody GetPhysicsBody(int index)
 {
     PhysicsBody body = NULL;

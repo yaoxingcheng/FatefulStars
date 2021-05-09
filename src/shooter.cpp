@@ -8,7 +8,7 @@
 using namespace std;
 
 Shooter::Shooter(Game* game, ShooterPosition pos, float ball_radius, float ball_dense) : game(game), pos(pos), ball_radius(ball_radius), ball_dense(ball_dense) {
-    holded_body_id = -1;
+    holded_body = NULL;
 }
 
 Shooter::~Shooter() {
@@ -36,9 +36,8 @@ void Shooter::createNewBody() {
     float cx = getX();
     float cy = getY();
     cout << "created body at " << cx << ", " << cy << endl;
-    PhysicsBody body = CreatePhysicsBodyCircle((Vector2){cx, cy}, ball_radius, ball_dense);
-    body->enabled = false;
-    holded_body_id = body->id;
+    holded_body = CreatePhysicsBodyPolygon((Vector2){cx, cy}, ball_radius, GetRandomValue(3, 8), ball_dense);
+    holded_body->enabled = false;
 }
 
 void AddLocalGravity(PhysicsBody body, PhysicsBody anchor, float force){
@@ -54,22 +53,21 @@ void AddLocalGravity(PhysicsBody body, PhysicsBody anchor, float force){
 void Shooter::Update() {
     if (pos == DOWN && !game->IsMultiPlayer()) return;
     UpdatePhysics(); 
+    if (holded_body == NULL) createNewBody();
     if (pos == UP) {
         InputController* input = game->GetInput();
         input->SetEnergy(std::min(input->GetEnergy(), 500));
         int energy = input->GetEnergy();
-
         if (IsMouseButtonPressed(MOUSE_RIGHT_BUTTON)) {
-            PhysicsBody body = GetPhysicsBody(holded_body_id);
+            PhysicsBody body = GetPhysicsBodyByID(holded_body->id);
             Planet* planet = game->GetPlanet();
             body->enabled = true;
             float velocity_direction = pos == UP ? 1 : -1;
-            body->position.y += 0.075 * velocity_direction;
+            body->position.y += 0.1 * velocity_direction;
             body->velocity = (Vector2){0, velocity_direction * sqrtf(float(energy) * body->inverseMass)};
             AddLocalGravity(body, planet->GetBody(), game->pull_coef);
             createNewBody();
         }
-        if (holded_body_id == -1) createNewBody();
     }
     
 }
@@ -87,17 +85,17 @@ void Shooter::destroyBody() {
             }
             if (body != NULL && out_of_box) DestroyPhysicsBody(body);
         }
+
 }
 
 void Shooter::drawBody() {
     destroyBody();
     int planet_id = game->GetPlanet()->GetID();
     int bodiesCount = GetPhysicsBodiesCount();
-    bodiesCount = GetPhysicsBodiesCount();
-    for (int i = 0; i < bodiesCount; i++)
-        if (i != planet_id){
+    for (int i = 0; i < bodiesCount; i++) {
             PhysicsBody body = GetPhysicsBody(i);
-            if (i == holded_body_id) body->position = getHoldPosition();
+            if (body->id == planet_id) continue;
+            if (body->id == holded_body->id) body->position = getHoldPosition();
             if (body != NULL)
             {
                 int vertexCount = GetPhysicsShapeVerticesCount(i);

@@ -19,7 +19,7 @@ private:
     ShooterPosition pos;
     float ball_radius;
     float ball_dense;
-    int holded_body_id;
+    PhysicsBody holded_body;
     float getX();
     float getY();
     void createNewBody();

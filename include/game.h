@@ -5,6 +5,9 @@
 
 #include "physac.h"
 
+#include <iostream>
+using namespace std;
+
 class Planet;
 class Shooter;
 class InputController;

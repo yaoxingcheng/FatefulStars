@@ -10,11 +10,15 @@ Planet::Planet(Game* game) : game(game) {
     dense = 100;
     body = CreatePhysicsBodyCircle((Vector2){float(x_position), float(y_position)}, radius, dense);
     body->enabled = false;
-    body_id = body->id;
 }
 
 Planet::~Planet() {
 
+}
+
+int Planet::GetID() {
+    if (body == NULL) return -1;
+    return body->id;
 }
 
 void Planet::Update() {

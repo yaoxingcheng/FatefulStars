@@ -11,14 +11,11 @@ public:
     PhysicsBody GetBody(void) {
         return body;
     }
-    int GetID(void) {
-        return body_id;
-    }
+    int GetID(void);
 
 private:
     Game* game;
     PhysicsBody body;
-    int body_id;
     int x_position;
     int y_position;
     int radius;
