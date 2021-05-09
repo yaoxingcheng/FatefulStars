@@ -160,9 +160,14 @@ typedef struct PhysicsShape {
 typedef struct PhysicsBodyData {
     unsigned int id;                            // Unique identifier
     bool enabled;                               // Enabled dynamics state (collisions are calculated anyway)
+    bool newlyadded;
+    bool breakable;
+    bool holded;
     Vector2 position;                           // Physics body shape pivot
     Vector2 velocity;                           // Current linear velocity applied to position
     Vector2 force;                              // Current linear force (reset to 0 every step)
+    float density;
+    float sides;
     float angularVelocity;                      // Current angular velocity applied to orient
     float torque;                               // Current angular force (reset to 0 every step)
     float orient;                               // Rotation in radians

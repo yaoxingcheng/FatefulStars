@@ -1,5 +1,9 @@
 #include "raylib.h"
 #include "physac.h"
+#include <stdio.h>
+#include "game.h"
+#include "planet.h"
+#include "shooter.h"
 
 // Support TRACELOG macros
 #define PHYSAC_DEBUG
@@ -166,6 +170,8 @@ PHYSACDEF PhysicsBody CreatePhysicsBodyRectangle(Vector2 pos, float width, float
         body->id = id;
         body->enabled = true;
         body->position = pos;
+        body->sides = 4;
+        body->density = density;
         body->shape.type = PHYSICS_POLYGON;
         body->shape.body = body;
         body->shape.transform = MathMatFromRadians(0.0f);
@@ -241,6 +247,8 @@ PHYSACDEF PhysicsBody CreatePhysicsBodyPolygon(Vector2 pos, float radius, int si
     {
         // Initialize new body with generic values
         body->id = id;
+        body->density = density;
+        body->sides = sides;
         body->enabled = true;
         body->position = pos;
         body->velocity = PHYSAC_VECTOR_ZERO;
@@ -250,8 +258,11 @@ PHYSACDEF PhysicsBody CreatePhysicsBodyPolygon(Vector2 pos, float radius, int si
         body->orient = 0.0f;
         body->shape.type = PHYSICS_POLYGON;
         body->shape.body = body;
+        body->shape.radius = radius;
         body->shape.transform = MathMatFromRadians(0.0f);
         body->shape.vertexData = CreateDefaultPolygon(radius, sides);
+        body->newlyadded = true;
+        body->breakable = true;
 
         // Calculate centroid and moment of inertia
         Vector2 center = { 0.0f, 0.0f };
@@ -800,17 +811,26 @@ void UpdatePhysicsStep(void)
         PhysicsBody body = bodies[i];
         body->isGrounded = false;
     }
- 
+
+    for (unsigned int i = 0; i < physicsBodiesCount; i++){
+        bodies[i]->newlyadded = false;
+    }
+
     // Generate new collision information
     for (unsigned int i = 0; i < physicsBodiesCount; i++)
     {
         PhysicsBody bodyA = bodies[i];
+
+        if(bodyA->newlyadded)
+            break;
 
         if (bodyA != NULL)
         {
             for (unsigned int j = i + 1; j < physicsBodiesCount; j++)
             {
                 PhysicsBody bodyB = bodies[j];
+                if(bodyB->newlyadded)
+                    break;
 
                 if (bodyB != NULL)
                 {
@@ -821,6 +841,29 @@ void UpdatePhysicsStep(void)
 
                     if (manifold->contactsCount > 0)
                     {
+
+                        PhysicsBody BreakBody = bodyB;
+                        if(bodyA->holded != true and bodyB->holded != true and BreakBody->breakable and BreakBody->id != 0 and bodyA->id != 0){
+
+                            PhysicsBody body = CreatePhysicsBodyPolygon(BreakBody->position, BreakBody->shape.radius, BreakBody->sides, BreakBody->density);
+                            BreakBody->breakable = false;
+                            body->breakable = false;
+                            bodyB->breakable = false;
+                            printf("BODY: %d %f %f %f %f %f\n", BreakBody->id,  BreakBody->position.x, BreakBody->position.y, BreakBody->shape.radius, BreakBody->sides, BreakBody->density);
+
+                            if (body != NULL){
+                                body->useGravity = false;
+                                body->useLocalGravity = true;
+                                int L = std::min(Game::screenWidth, Game::screenHeight);
+                                float x_position = L / 2;
+                                float y_position = L / 2;
+                                float radius = L / 8;
+                                body->anchor = (Vector2){ x_position, y_position};
+                                body->anchorMass = radius*radius*3.1415926 * 100;
+                                body->anchorForce = Game::pull_coef;
+                            }
+                        }
+
                         // Create a new manifold with same information as previously solved manifold and add it to the manifolds pool last slot
                         PhysicsManifold manifold = CreatePhysicsManifold(bodyA, bodyB);
                         manifold->penetration = manifold->penetration;
