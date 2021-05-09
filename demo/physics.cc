@@ -11,10 +11,10 @@
 *
 ********************************************************************************************/
 
-#include "../headers/raylib.h"
+#include "../include/external/raylib.h"
 
 #define PHYSAC_IMPLEMENTATION
-#include "../headers/physac.h"
+#include "../include/external/physac.h"
 
 void AddLocalGravity(PhysicsBody body, PhysicsBody anchor, float force){
     if (body != NULL && anchor != NULL){

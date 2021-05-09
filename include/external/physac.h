@@ -177,7 +177,6 @@ typedef struct PhysicsBodyData {
     bool isGrounded;                            // Physics grounded on other body state
     bool freezeOrient;                          // Physics rotation constraint
     PhysicsShape shape;                         // Physics body shape information (type, radius, vertices, transform)
-
     bool useLocalGravity;
     Vector2 anchor;
     float anchorForce;
@@ -1519,7 +1518,6 @@ static void SolvePolygonToPolygon(PhysicsManifold manifold)
 static void IntegratePhysicsForces(PhysicsBody body)
 {
     if ((body == NULL) || (body->inverseMass == 0.0f) || !body->enabled) return;
-    
     if (body->useLocalGravity)
     {
         Vector2 forceDirection = MathVector2Subtract(body->anchor, body->position);
@@ -1527,18 +1525,15 @@ static void IntegratePhysicsForces(PhysicsBody body)
         forceDirection.y *= body->anchorForce;
         PhysicsAddForce(body, forceDirection);
     }
-
     body->velocity.x += (float)((body->force.x*body->inverseMass)*(deltaTime/2.0));
     body->velocity.y += (float)((body->force.y*body->inverseMass)*(deltaTime/2.0));
-
     if (body->useLocalGravity)
     {
         Vector2 forceDirection = MathVector2Subtract(body->anchor, body->position);
-        forceDirection.x *= -1 * body->anchorForce;
-        forceDirection.y *= -1 * body->anchorForce;
+        forceDirection.x *= body->anchorForce;
+        forceDirection.y *= body->anchorForce;
         PhysicsAddForce(body, forceDirection);
     }
-
     if (body->useGravity)
     {
         body->velocity.x += (float)(gravityForce.x*(deltaTime/1000/2.0));
