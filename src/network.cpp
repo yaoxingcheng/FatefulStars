@@ -19,8 +19,6 @@ NetworkManager::~NetworkManager() {
 }
 
 void NetworkManager::Init() {
-    buffer = new char[BUFFER_SIZE];
-
     int padding = 20;
     Vector2 btnPos((Vector2){game->screenWidth - padding - 60, padding});
     mainBtn = new Button(game, "resources/btn/network1.png");

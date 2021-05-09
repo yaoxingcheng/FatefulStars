@@ -6,6 +6,7 @@ public:
     Planet(Game* game);
     ~Planet();
 
+    void Init();
     void Update();
     void Draw();
     PhysicsBody GetBody(void) {
@@ -20,6 +21,8 @@ private:
     int y_position;
     int radius;
     int dense;
+    Texture2D bg;
+    Texture2D* balls;
 };
 
 #endif

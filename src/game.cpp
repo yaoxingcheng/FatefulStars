@@ -3,13 +3,16 @@
 #include "shooter.h"
 #include "input.h"
 #include "network.h"
+#include "anim.h"
 
 Game::Game() {
+    scene = WELCOME;
     planet = new Planet(this);
     shooter = new Shooter(this, UP, ball_radius, ball_dense);
     oppositeShooter = new Shooter(this, DOWN, ball_radius, ball_dense);
     input = new InputController(this);
     networkManager = new NetworkManager(this);
+    welcomeAnim = new WelcomeAnimation(this);
 }
 
 Game::~Game() {
@@ -18,25 +21,35 @@ Game::~Game() {
     delete oppositeShooter;
     delete input;
     delete networkManager;
+    delete welcomeAnim;
 }
 
 // Initialize game variables
 void Game::InitGame(void) {
     framesCounter = 0;
     gameOver = false;
-
+    pause = false;
     networkManager->Init();
+    welcomeAnim->Init();
+    planet->Init();
+    shooter->Init();
+    oppositeShooter->Init();
 }
 
 // Update game per frame
 void Game::UpdateGame(void) {
     if (!gameOver) {
         framesCounter ++;
-        input->Update();
-        networkManager->Update();
-        planet->Update();
-        shooter->Update();
-        oppositeShooter->Update();
+        if (scene == WELCOME) {
+            welcomeAnim->Update();
+        } else {
+            input->Update();
+            networkManager->Update();
+            planet->Update();
+            shooter->Update();
+            oppositeShooter->Update();
+        }
+
     }
 }
 
@@ -46,7 +59,12 @@ void Game::DrawGame(void) {
     ClearBackground(BLACK);
 
     if (!gameOver) {
-        if (scene == MAIN) {
+        if (scene == WELCOME) {
+            welcomeAnim->Draw();
+        } else if (scene == MAIN) {
+            if (welcomeAnim->ShouldRender()) {
+                welcomeAnim->Draw();
+            }
             planet->Draw();
             shooter->Draw();
             oppositeShooter->Draw();

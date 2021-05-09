@@ -19,7 +19,11 @@ Shooter::Shooter(Game* game, ShooterPosition pos, float ball_radius, float ball_
 }
 
 Shooter::~Shooter() {
+    UnloadTexture(texture);
+}
 
+void Shooter::Init() {
+    texture = LoadTexture("resources/shooter.png");
 }
 
 float Shooter::getX() {
@@ -135,9 +139,7 @@ void Shooter::Draw() {
     float cx = pos == UP ? input->GetCursorX() : cursorX;
     float startY = (pos == UP ? 0.03f : 0.97f) * L;
     float endY = (pos == UP ? 0.1f : 0.9f) * L;
-    DrawLineEx((Vector2){cx - 0.1f * L, startY}, (Vector2){cx - 0.02f * L, endY}, 3, WHITE);
-    DrawLineEx((Vector2){cx + 0.1f * L, startY}, (Vector2){cx + 0.02f * L, endY}, 3, WHITE); 
-
+    DrawTextureEx(texture, (Vector2){cx - texture.width / 2.0f + (pos == UP ? 0 : texture.width), pos == UP ? 0 : game->screenHeight}, pos == UP ? 0 : 180, 1, WHITE);
     if (pos == UP) {
         DrawText(std::to_string(input->GetEnergy()).c_str(), 0.02f * L, 0.02f * L, 48, WHITE);
     }

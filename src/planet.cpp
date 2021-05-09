@@ -1,6 +1,7 @@
 #include <algorithm>
 #include "game.h"
 #include "planet.h"
+#include "anim.h"
 
 Planet::Planet(Game* game) : game(game) {
     int L = std::min(game->screenWidth, game->screenHeight);
@@ -13,7 +14,19 @@ Planet::Planet(Game* game) : game(game) {
 }
 
 Planet::~Planet() {
+    UnloadTexture(bg);
+    for (int i = 0; i < 4; ++i) {
+        UnloadTexture(balls[i]);
+    }
+    delete[] balls;
+}
 
+void Planet::Init() {
+    bg = LoadTexture("resources/bg.png");
+    balls = new Texture2D[4];
+    for (int i = 0; i < 4; ++i) {
+        balls[i] = LoadTexture(TextFormat("resources/ball%d.png", i));
+    }
 }
 
 int Planet::GetID() {
@@ -26,5 +39,8 @@ void Planet::Update() {
 }
 
 void Planet::Draw() {
-    DrawCircle(x_position, y_position, radius, LIGHTGRAY);
+    const int DURATION = WelcomeAnimation::DURATION;
+    const int ANIMATION = WelcomeAnimation::ANIMATION;
+    DrawTexture(bg, 0, 0, Fade(WHITE, 1.0f * std::min(game->framesCounter - DURATION - ANIMATION / 2, ANIMATION) / ANIMATION));
+    DrawTexture(balls[0], 0, 0, Fade(WHITE, 1.0f * std::min(game->framesCounter - DURATION - ANIMATION / 2, ANIMATION) / ANIMATION));
 }

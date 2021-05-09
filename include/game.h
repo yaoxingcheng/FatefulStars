@@ -9,15 +9,17 @@
 #include <iostream>
 using namespace std;
 
+enum Scene {
+    WELCOME,
+    MAIN,
+    NETWORK_SETTINGS,
+};
+
 class Planet;
 class Shooter;
 class InputController;
 class NetworkManager;
-
-enum Scene {
-    MAIN,
-    NETWORK_SETTINGS,
-};
+class WelcomeAnimation;
 
 class Game {
 public:
@@ -31,6 +33,7 @@ public:
 
     int framesCounter;
     bool gameOver;
+    bool pause;
 
     Game();
     ~Game();
@@ -59,6 +62,7 @@ private:
     Shooter* oppositeShooter;
     InputController *input;
     NetworkManager* networkManager;
+    WelcomeAnimation* welcomeAnim;
 };
 
 #endif

@@ -14,6 +14,7 @@ public:
     void SetCursorX(int);
     void Update();
     void Draw();
+    void Init();
 
 private:
     Game* game;
@@ -29,6 +30,7 @@ private:
     void drawBody();
     Vector2 getHoldPosition();
     int cursorX;
+    Texture2D texture;
 };
 
 #endif

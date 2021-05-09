@@ -48,9 +48,6 @@ private:
     NetworkRole role;
     NetworkStatus status;
 
-    char* buffer;
-    int buffer_cur;
-
     std::thread* listenThread;
     std::thread* connectThread;
     int server_sockfd = -1;
