@@ -2,6 +2,7 @@
 #define __GAME_H__
 
 #include "raylib.h"
+#include "physac.h"
 
 class Planet;
 class Shooter;
@@ -12,6 +13,8 @@ class Game {
 public:
     static const int screenWidth = 800;
     static const int screenHeight = 800;
+    static constexpr float ball_radius = 5.0;
+    static constexpr float ball_dense = 10.0;
 
     int framesCounter;
     bool gameOver;
@@ -27,6 +30,7 @@ public:
 
     bool IsMultiPlayer(void);
     InputController* GetInput(void);
+    Planet* GetPlanet(void);
     
 private:
     Planet* planet;

@@ -1,11 +1,9 @@
 #include "game.h"
 
-#define PHYSAC_IMPLEMENTATION
-#include "external/physac.h"
-
 int main(void) {
     Game *g = new Game();
     InitWindow(g->screenWidth, g->screenHeight, "Game");
+    InitPhysics();
     g->InitGame();
 
     SetTargetFPS(60);

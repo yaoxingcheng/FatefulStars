@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -Wall -std=c++11 -D_DEFAULT_SOURCE -Wno-missing-braces -s -O2 -D_DEFAULT_SOURCE -I/usr/local/include -I./include -L. -L/usr/local/lib -lraylib -lGL -lm -lpthread -ldl -lrt -lX11 -DPLATFORM_DESKTOP
+CXXFLAGS = -Wall -std=c++11 -D_DEFAULT_SOURCE -Wno-missing-braces -s -O2 -D_DEFAULT_SOURCE -I/usr/local/include -I./include -I./include/external -framework CoreVideo -framework IOKit -framework Cocoa -framework GLUT -framework OpenGL
 SRCS = $(wildcard src/*.cpp)
 OBJS = $(SRCS:.cpp=.o)
 
@@ -8,7 +8,7 @@ OBJS = $(SRCS:.cpp=.o)
 run: game
 	./game
 
-game: $(OBJS)
+game: $(OBJS) libraylib.a
 	$(CXX) -o $@ $^ $(CXXFLAGS)
 
 %.o: %.cpp

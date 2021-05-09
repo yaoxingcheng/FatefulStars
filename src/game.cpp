@@ -6,8 +6,8 @@
 
 Game::Game() {
     planet = new Planet(this);
-    shooter = new Shooter(this, UP);
-    oppositeShooter = new Shooter(this, DOWN);
+    shooter = new Shooter(this, UP, ball_radius, ball_dense);
+    oppositeShooter = new Shooter(this, DOWN, ball_radius, ball_dense);
     input = new InputController(this);
     networkManager = new NetworkManager(this);
 }
@@ -40,7 +40,6 @@ void Game::UpdateGame(void) {
 void Game::DrawGame(void) {
     BeginDrawing();
     ClearBackground(RAYWHITE);
-
     if (!gameOver) {
         planet->Draw();
         shooter->Draw();
@@ -56,4 +55,8 @@ bool Game::IsMultiPlayer(void) {
 
 InputController* Game::GetInput(void) {
     return input;
+}
+
+Planet* Game::GetPlanet(void) { 
+    return planet;
 }
