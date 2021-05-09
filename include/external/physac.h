@@ -158,11 +158,12 @@ typedef struct PhysicsShape {
 } PhysicsShape;
 
 typedef struct PhysicsBodyData {
-    unsigned int id;                            // Unique identifier
+    unsigned int id, twinID;                            // Unique identifier
     bool enabled;                               // Enabled dynamics state (collisions are calculated anyway)
     bool newlyadded;
     bool breakable;
     bool holded;
+    bool tobeDeleted;
     Vector2 position;                           // Physics body shape pivot
     Vector2 velocity;                           // Current linear velocity applied to position
     Vector2 force;                              // Current linear force (reset to 0 every step)

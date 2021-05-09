@@ -12,9 +12,25 @@ public:
     ~Shooter();
 
     void SetCursorX(int);
+    void SetNumSides(int);
+    void SetNumShot(int);
+    void SetEnergy(int);
+    void SetReleased(int);
     void Update();
     void Draw();
     void Init();
+    int GetNumSides(){
+        return num_sides;
+    }
+    int GetNumShot(){
+        return num_shot;
+    }
+    int GetCurrentShot(){
+        return current_shot;
+    }
+    int GetEnergy(){
+        return energy;
+    }
 
 private:
     Game* game;
@@ -28,9 +44,16 @@ private:
     void createNewBody();
     void destroyBody();
     void drawBody();
+    void drawShooter();
+    void drawText();
     Vector2 getHoldPosition();
     int cursorX;
     Texture2D texture;
+    int energy;
+    int released;
+    int num_shot;
+    int num_sides;
+    int current_shot;
 };
 
 #endif

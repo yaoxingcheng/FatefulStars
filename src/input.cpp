@@ -1,7 +1,9 @@
 #include "game.h"
 #include "input.h"
 
-InputController::InputController(Game* game) : game(game) {}
+InputController::InputController(Game* game) : game(game) {
+    energy = 0;
+}
 
 InputController::~InputController() {
 
