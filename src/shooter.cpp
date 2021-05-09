@@ -38,6 +38,8 @@ void Shooter::createNewBody() {
     cout << "created body at " << cx << ", " << cy << endl;
     holded_body = CreatePhysicsBodyPolygon((Vector2){cx, cy}, ball_radius, GetRandomValue(3, 8), ball_dense);
     holded_body->enabled = false;
+    holded_body->breakable = false;
+    holded_body->holded = true;
 }
 
 void AddLocalGravity(PhysicsBody body, PhysicsBody anchor, float force){
@@ -51,8 +53,8 @@ void AddLocalGravity(PhysicsBody body, PhysicsBody anchor, float force){
 }
 
 void Shooter::Update() {
+    UpdatePhysics();
     if (pos == DOWN && !game->IsMultiPlayer()) return;
-    UpdatePhysics(); 
     if (holded_body == NULL) createNewBody();
     if (pos == UP) {
         InputController* input = game->GetInput();
@@ -65,8 +67,12 @@ void Shooter::Update() {
             float velocity_direction = pos == UP ? 1 : -1;
             body->position.y += 0.1 * velocity_direction;
             body->velocity = (Vector2){0, velocity_direction * sqrtf(float(energy) * body->inverseMass)};
+            std::cout<<"if this holded body is breakable: "<<body->breakable<<std::endl;
             AddLocalGravity(body, planet->GetBody(), game->pull_coef);
             createNewBody();
+
+            body->breakable = true;
+            body->holded = false;
         }
     }
     

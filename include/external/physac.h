@@ -103,8 +103,8 @@
 //----------------------------------------------------------------------------------
 // Defines and Macros
 //----------------------------------------------------------------------------------
-#define PHYSAC_MAX_BODIES               64          // Maximum number of physic bodies supported
-#define PHYSAC_MAX_MANIFOLDS            4096        // Maximum number of physic bodies interactions (64x64)
+#define PHYSAC_MAX_BODIES               256          // Maximum number of physic bodies supported
+#define PHYSAC_MAX_MANIFOLDS            60960       // Maximum number of physic bodies interactions (64x64)
 #define PHYSAC_MAX_VERTICES             24          // Maximum number of vertex for polygons shapes
 #define PHYSAC_DEFAULT_CIRCLE_VERTICES  24          // Default number of vertices for circle shapes
 
@@ -160,9 +160,14 @@ typedef struct PhysicsShape {
 typedef struct PhysicsBodyData {
     unsigned int id;                            // Unique identifier
     bool enabled;                               // Enabled dynamics state (collisions are calculated anyway)
+    bool newlyadded;
+    bool breakable;
+    bool holded;
     Vector2 position;                           // Physics body shape pivot
     Vector2 velocity;                           // Current linear velocity applied to position
     Vector2 force;                              // Current linear force (reset to 0 every step)
+    float density;
+    float sides;
     float angularVelocity;                      // Current angular velocity applied to orient
     float torque;                               // Current angular force (reset to 0 every step)
     float orient;                               // Rotation in radians
