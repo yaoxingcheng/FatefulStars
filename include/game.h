@@ -67,6 +67,10 @@ private:
     InputController *input;
     NetworkManager* networkManager;
     WelcomeAnimation* welcomeAnim;
+    int resetTime = 0;
+    int resetTimeNow = 0;
+
+    void realResetGame();
 };
 
 #endif

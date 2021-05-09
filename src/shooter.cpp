@@ -118,7 +118,7 @@ void Shooter::drawBody() {
     for (int i = 0; i < bodiesCount; i++) {
             PhysicsBody body = GetPhysicsBody(i);
             if (!body->enabled && body->id != holded_body->id) continue;
-            if (body->id == holded_body->id) {
+            if (holded_body != NULL && body->id == holded_body->id) {
                 body->position = getHoldPosition();
             }
             if (body != NULL)

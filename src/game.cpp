@@ -38,20 +38,32 @@ void Game::InitGame(void) {
 
 //Reset Game
 void Game::ResetGame(void) {
+    ++resetTime;
+}
+
+void Game::realResetGame(void) {
     ResetPhysics();
     planet = new Planet(this);
     shooter = new Shooter(this, UP, ball_radius, ball_dense);
     oppositeShooter = new Shooter(this, DOWN, ball_radius, ball_dense);
     input = new InputController(this);
+    planet->Init();
+    shooter->Init();
+    oppositeShooter->Init();
 }
 
 // Update game per frame
 void Game::UpdateGame(void) {
     if (!gameOver) {
         framesCounter ++;
+        if (resetTime != resetTimeNow) {
+            resetTimeNow = resetTime;
+            realResetGame();
+        }
         if (scene == WELCOME) {
             welcomeAnim->Update();
-        } else if (scene == MAIN) {
+        }
+        if (scene == MAIN) {
             input->Update();
             planet->Update();
             shooter->Update();
