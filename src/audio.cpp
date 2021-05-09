@@ -1,3 +1,4 @@
+#include "game.h"
 #include "audio.h"
 
 AudioController::AudioController() {
@@ -14,24 +15,24 @@ AudioController::~AudioController() {
     UnloadSound(destroy);
 }
 
-AudioController::Update() {
+void AudioController::Update() {
     shooted = collided = destroyed = 0;
     if (!IsSoundPlaying(bgm)) PlaySound(bgm);
 }
 
-AudioController::Shoot() {
+void AudioController::Shoot() {
     if (shooted) return;
     PlaySoundMulti(shoot);
     shooted = 1;
 }
 
-AudioController::Collide() {
+void AudioController::Collide() {
     if (collided) return;
     PlaySoundMulti(collide);
     collided = 1;
 }
 
-AudioController::Destroy() {
+void AudioController::Destroy() {
     if (destroyed) return;
     PlaySoundMulti(destroy);
     destroyed = 1;
