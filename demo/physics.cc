@@ -11,10 +11,10 @@
 *
 ********************************************************************************************/
 
-#include "raylib.h"
+#include "../headers/raylib.h"
 
 #define PHYSAC_IMPLEMENTATION
-#include "physac.h"
+#include "../headers/physac.h"
 
 int main(void)
 {
