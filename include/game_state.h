@@ -6,6 +6,7 @@ struct GameState {
     int energy;
     int relased; 
     int next_sides;
+    bool finished;
 };
 
 #endif

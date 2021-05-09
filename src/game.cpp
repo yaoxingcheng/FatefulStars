@@ -87,6 +87,7 @@ void Game::LoadState(const GameState *state) {
 }
 
 void Game::DumpState(GameState *state) {
+    state->finished = !networkManager->IsConnected();
     state->cursorX = input->GetCursorX();
     state->energy = input->GetEnergy();
     state->relased = int(IsMouseButtonReleased(MOUSE_LEFT_BUTTON));
