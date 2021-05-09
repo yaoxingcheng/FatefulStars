@@ -14,6 +14,7 @@ Shooter::Shooter(Game* game, ShooterPosition pos, float ball_radius, float ball_
     float cy = (pos == UP ? 0.065f : 0.935f) * L;
     shooter_body = CreatePhysicsBodyCircle((Vector2){cx, cy}, game->shooter_radius, game->shooter_dense);
     shooter_body->enabled = false;
+    shooter_body->holded = true;
 }
 
 Shooter::~Shooter() {
@@ -57,15 +58,11 @@ void AddLocalGravity(PhysicsBody body, PhysicsBody anchor, float force){
 }
 
 void Shooter::Update() {
-    UpdatePhysics();
     if (pos == DOWN && !game->IsMultiPlayer()) return;
-<<<<<<< HEAD
     float cx = getX();
     float cy = getY();
     shooter_body->position = (Vector2){cx, cy};
     UpdatePhysics(); 
-=======
->>>>>>> 80467b9108dd342b7527e618c523431416521f03
     if (holded_body == NULL) createNewBody();
     if (pos == UP) {
         InputController* input = game->GetInput();
