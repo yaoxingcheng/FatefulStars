@@ -3,6 +3,11 @@
 
 #include "raylib.h"
 
+class Planet;
+class Shooter;
+class InputController;
+class NetworkManager;
+
 class Game {
 public:
     static const int screenWidth = 800;
@@ -19,6 +24,16 @@ public:
     void DrawGame(void);         // Draw game (one frame)
     void UnloadGame(void);       // Unload game
     void UpdateDrawFrame(void);  // Update and Draw (one frame)
+
+    bool IsMultiPlayer(void);
+    InputController* GetInput(void);
+    
+private:
+    Planet* planet;
+    Shooter* shooter;
+    Shooter* oppositeShooter;
+    InputController *input;
+    NetworkManager* networkManager;
 };
 
 #endif

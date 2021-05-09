@@ -3,7 +3,10 @@ CXXFLAGS = -Wall -std=c++11 -D_DEFAULT_SOURCE -Wno-missing-braces -s -O2 -D_DEFA
 SRCS = $(wildcard src/*.cpp)
 OBJS = $(SRCS:.cpp=.o)
 
-.PHONY: clean
+.PHONY: run clean
+
+run: game
+	./game
 
 game: $(OBJS)
 	$(CXX) -o $@ $^ $(CXXFLAGS)

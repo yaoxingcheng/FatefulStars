@@ -1,23 +1,59 @@
 #include "game.h"
+#include "planet.h"
+#include "shooter.h"
+#include "input.h"
+#include "network.h"
 
-#define PHYSAC_IMPLEMENTATION
-#include "external/physac.h"
+Game::Game() {
+    planet = new Planet(this);
+    shooter = new Shooter(this, UP);
+    oppositeShooter = new Shooter(this, DOWN);
+    input = new InputController(this);
+    networkManager = new NetworkManager(this);
+}
 
-int main(void) {
-    Game *g = new Game();
-    InitWindow(g->screenWidth, g->screenHeight, "Game");
-    g->InitGame();
+Game::~Game() {
+    delete planet;
+    delete shooter;
+    delete oppositeShooter;
+    delete input;
+    delete networkManager;
+}
 
-    SetTargetFPS(60);
+// Initialize game variables
+void Game::InitGame(void) {
+    framesCounter = 0;
+    gameOver = false;
+}
 
-    // Main game loop
-    // Detect window close button or ESC key
-    while (!WindowShouldClose()) {
-        g->UpdateGame();
-        g->DrawGame();
+// Update game per frame
+void Game::UpdateGame(void) {
+    if (!gameOver) {
+        input->Update();
+        planet->Update();
+        shooter->Update();
+        oppositeShooter->Update();
+    }
+}
+
+// Draw game per frame
+void Game::DrawGame(void) {
+    BeginDrawing();
+    ClearBackground(RAYWHITE);
+
+    if (!gameOver) {
+        planet->Draw();
+        shooter->Draw();
+        oppositeShooter->Draw();
     }
 
-    CloseWindow();
+    EndDrawing();
+}
 
-    return 0;
+bool Game::IsMultiPlayer(void) {
+    return true;
+}
+
+InputController* Game::GetInput(void) {
+    return input;
 }
