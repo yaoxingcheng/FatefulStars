@@ -32,10 +32,11 @@ void Game::DrawGame(void)
 
         if (pause) 
         {
-            char msgPause[128] = "GAME PAUSED";
+            char msgPause[128] = "Tap 'P' to continue";
             float x = screenWidth/2 - MeasureText(msgPause, 40)/2;
             float y = screenHeight/2 - 40;
-            DrawText(msgPause, x, y, 40, GRAY);
+            DrawRectangleV( {0 , 0}, {screenWidth, screenHeight}, {255,255,255,150});
+            DrawText(msgPause, x, y, 40, VIOLET);
         }
     }
     else
@@ -60,32 +61,37 @@ void Game::DrawGame(void)
     // DrawGrid(10, 1.0f); //Draw a grid
     // EndMode3D();
 
-    DrawCircleGradient(100,100,50,BLACK,BLANK);
-    Rectangle rec = {150,150,50,50};
-    DrawRectangleGradientEx(rec,RED,GREEN,BLUE,VIOLET);
+    // DrawCircleGradient(100,100,50,BLACK,BLANK);
+    // Rectangle rec = {150,150,50,50};
+    // DrawRectangleGradientEx(rec,RED,GREEN,BLUE,VIOLET);
 
-    static Image ti2 = LoadImage("resour/big.png");
+    static Image cir = LoadImage("resour/tmp-cir.png");
+    static Image tra = LoadImage("resour/tmp-tra.png");
+    static Image rec = LoadImage("resour/tmp-rec.png");
     static int vis=0;
-    // static Texture2D tt;
+    static Texture2D t0;
+    static Texture2D t3;
+    static Texture2D t4;
     if (!vis){
         vis=1;
-        ImageResize(&ti2,400,200);
-        // ImageMipmaps(&ti2);
-        // tt = LoadTextureFromImage(ti);   
+        ImageResize(&cir,100,100);
+        ImageResize(&tra,100,100);
+        ImageResize(&rec,100,100);
+        t0 = LoadTextureFromImage(cir);
+        t3 = LoadTextureFromImage(tra);
+        t4 = LoadTextureFromImage(rec);
     }
 
-    Image ti = ImageCopy(ti2);
-    // ImageResize(&ti,400,200);
-    // ImageMipmaps(&ti);
-    Texture2D tt = LoadTextureFromImage(ti);   
 
     // Texture2D ring_tex = LoadTexture("resour/ring.jpeg");
     // DrawTexture(tt,300,100,VIOLET);
     static float rot = 0;
-    // DrawTextureEx(tt,{300,100},rot,1,WHITE);
-    float wi = tt.width, he = tt.height;
-    DrawTexturePro(tt,{0.,0.,wi,he},{100,100,100+wi,100+he},{wi/2,he/2},rot,CLITERAL(Color){ 255, 255, 255, 50 });
-    rot += 5;
+    DrawTextureEx(t0,{300,150},rot,1,VIOLET);
+    DrawTextureEx(t3,{300,150},rot*2,1,GREEN);
+    DrawTextureEx(t4,{300,150},rot*4,1,BLUE);
+    // float wi = tt.width, he = tt.height;
+    // DrawTexturePro(tt,{0.,0.,wi,he},{100,100,100+wi,100+he},{wi/2,he/2},rot,CLITERAL(Color){ 255, 255, 255, 50 });
+    rot += 1;
 
     EndDrawing();
 }
