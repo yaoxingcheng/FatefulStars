@@ -24,12 +24,16 @@ Game::~Game() {
 void Game::InitGame(void) {
     framesCounter = 0;
     gameOver = false;
+
+    networkManager->Init();
 }
 
 // Update game per frame
 void Game::UpdateGame(void) {
     if (!gameOver) {
+        framesCounter ++;
         input->Update();
+        networkManager->Update();
         planet->Update();
         shooter->Update();
         oppositeShooter->Update();
@@ -39,12 +43,17 @@ void Game::UpdateGame(void) {
 // Draw game per frame
 void Game::DrawGame(void) {
     BeginDrawing();
-    ClearBackground(RAYWHITE);
+    ClearBackground(BLACK);
 
     if (!gameOver) {
-        planet->Draw();
-        shooter->Draw();
-        oppositeShooter->Draw();
+        if (scene == MAIN) {
+            planet->Draw();
+            shooter->Draw();
+            oppositeShooter->Draw();
+            networkManager->DrawMainButton();
+        } else if (scene == NETWORK_SETTINGS) {
+            networkManager->DrawSettingsPanel();
+        }
     }
 
     EndDrawing();
@@ -52,6 +61,14 @@ void Game::DrawGame(void) {
 
 bool Game::IsMultiPlayer(void) {
     return true;
+}
+
+void Game::SetScene(Scene newScene) {
+    scene = newScene;
+}
+
+Scene Game::GetScene() {
+    return scene;
 }
 
 InputController* Game::GetInput(void) {

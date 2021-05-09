@@ -8,6 +8,11 @@ class Shooter;
 class InputController;
 class NetworkManager;
 
+enum Scene {
+    MAIN,
+    NETWORK_SETTINGS,
+};
+
 class Game {
 public:
     static const int screenWidth = 800;
@@ -27,8 +32,12 @@ public:
 
     bool IsMultiPlayer(void);
     InputController* GetInput(void);
-    
+
+    Scene GetScene();
+    void SetScene(Scene);
+
 private:
+    Scene scene;
     Planet* planet;
     Shooter* shooter;
     Shooter* oppositeShooter;

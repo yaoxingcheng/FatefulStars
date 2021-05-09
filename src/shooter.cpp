@@ -29,10 +29,10 @@ void Shooter::Draw() {
     float cx = pos == UP ? input->GetCursorX() : 0.5f * L;
     float startY = (pos == UP ? 0.03f : 0.97f) * L;
     float endY = (pos == UP ? 0.1f : 0.9f) * L;
-    DrawLineEx((Vector2){cx - 0.1f * L, startY}, (Vector2){cx - 0.02f * L, endY}, 3, BLACK);
-    DrawLineEx((Vector2){cx + 0.1f * L, startY}, (Vector2){cx + 0.02f * L, endY}, 3, BLACK); 
+    DrawLineEx((Vector2){cx - 0.1f * L, startY}, (Vector2){cx - 0.02f * L, endY}, 3, WHITE);
+    DrawLineEx((Vector2){cx + 0.1f * L, startY}, (Vector2){cx + 0.02f * L, endY}, 3, WHITE); 
 
     if (pos == UP) {
-        DrawText(std::to_string(input->GetEnergy()).c_str(), 0.88f * L, 0.02f * L, 48, BLACK);
+        DrawText(std::to_string(input->GetEnergy()).c_str(), 0.02f * L, 0.02f * L, 48, WHITE);
     }
 }
