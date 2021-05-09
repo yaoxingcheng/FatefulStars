@@ -2,7 +2,8 @@
 #define __GAME_STATE_H__
 
 struct GameState {
-    int cursorX; 
+    bool finished;
+    int cursorX;
 };
 
 #endif

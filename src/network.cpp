@@ -249,15 +249,35 @@ void NetworkManager::startCoummunication(int sockfd) {
 
     GameState* state = new GameState();
     int len = sizeof(GameState);
+
+    auto close_all = [&]() {
+        if (server_sockfd >= 0) {
+            close(server_sockfd);
+            server_sockfd = -1;
+        }
+        if (client_sockfd >= 0) {
+            close(client_sockfd);
+            client_sockfd = -1;
+        }
+        close(sockfd);
+        status = OFFLINE;
+    };
+
     while (true) {
         game->DumpState(state);
-        write(sockfd, state, len);
-
-        if (read(sockfd, state, len) == len) {
+        send(sockfd, state, len, 0);
+        if (state->finished) {
+            break;
+        }
+        if (recv(sockfd, state, len, MSG_WAITALL) == len) {
             game->LoadState(state);
+            if (state->finished) {
+                break;
+            }
         }
         usleep(10 * 1000);
     }
+    close_all();
 }
 
 bool NetworkManager::IsConnected() {
