@@ -13,7 +13,7 @@ public:
 
 private:
     bool shooted, collided, destroyed;
-    Sound shoot, collide, destroy;
+    Sound bgm, shoot, collide, destroy;
 };
 
 #endif
