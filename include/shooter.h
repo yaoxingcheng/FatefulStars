@@ -1,6 +1,8 @@
 #ifndef __SHOOTER_H__
 #define __SHOOTER_H__
 
+#include "drawgeo.h"
+
 enum ShooterPosition {
     UP,
     DOWN,
@@ -34,6 +36,7 @@ public:
 
 private:
     Game* game;
+    DrawGeo* drawgeo;
     ShooterPosition pos;
     float ball_radius;
     float ball_dense;
@@ -54,6 +57,7 @@ private:
     int num_shot;
     int num_sides;
     int current_shot;
+    int score = 0;
 };
 
 #endif

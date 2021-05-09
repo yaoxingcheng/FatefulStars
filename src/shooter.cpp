@@ -6,6 +6,7 @@
 #include "planet.h"
 #include <iostream>
 #include <cmath>
+#include "drawgeo.h"
 using namespace std;
 
 Shooter::Shooter(Game* game, ShooterPosition pos, float ball_radius, float ball_dense) : game(game), pos(pos), ball_radius(ball_radius), ball_dense(ball_dense) {
@@ -30,6 +31,7 @@ Shooter::~Shooter() {
 
 void Shooter::Init() {
     texture = LoadTexture("resources/shooter.png");
+    drawgeo = new DrawGeo();
 }
 
 float Shooter::getX() {
@@ -75,7 +77,12 @@ void Shooter::Update() {
     float cx = getX();
     float cy = getY();
     shooter_body->position = (Vector2){cx, cy};
-    if (pos == UP) UpdatePhysics(); 
+    int bodiesCount = GetPhysicsBodiesCount();
+    if (pos == UP) {
+        UpdatePhysics();
+        int delta = std::max(0, bodiesCount - GetPhysicsBodiesCount());
+        score += delta;
+    } 
     if (holded_body == NULL) createNewBody();
     InputController* input = game->GetInput();
     if (pos == UP) input->SetEnergy(std::min(input->GetEnergy(), 500));
@@ -125,17 +132,20 @@ void Shooter::drawBody() {
             {
                 if (pos != UP && body->id != holded_body->id) continue;
                 int vertexCount = GetPhysicsShapeVerticesCount(i);
+                static Vector2 vectors[10];
                 for (int j = 0; j < vertexCount; j++)
                 {
                     // Get physics bodies shape vertices to draw lines
                     // Note: GetPhysicsShapeVertex() already calculates rotation transformations
                     Vector2 vertexA = GetPhysicsShapeVertex(body, j);
+                    vectors[j] = vertexA;
 
                     int jj = (((j + 1) < vertexCount) ? (j + 1) : 0);   // Get next vertex or first to close the shape
                     Vector2 vertexB = GetPhysicsShapeVertex(body, jj);
 
                     DrawLineEx(vertexA, vertexB, 3, DARKBLUE);     // Draw a line between two vertex positions
                 }
+                drawgeo->DrawPolygon(vertexCount, vectors);
             }
         }
 }
@@ -152,9 +162,12 @@ void Shooter::drawText() {
     int L = std::min(game->screenWidth, game->screenHeight);
     if (pos == UP) {
         DrawText(std::to_string(input->GetEnergy()).c_str(), 0.02f * L, 0.02f * L, 48, WHITE);
+        DrawText(std::to_string(score).c_str(), 0.15f * L, 0.02f * L, 48, WHITE);
     } else {
         DrawText(std::to_string(energy).c_str(), 0.98f * L, 0.98f * L, 48, WHITE);
     }
+
+    DrawRectangle(0, 0, game->screenWidth, game->screenHeight, Fade(BLACK, 0.8));
 }
 
 void Shooter::Draw() {
