@@ -17,7 +17,7 @@ Button::~Button() {
 
 bool Button::Clicked() {
     bool action = false;
-    if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){pos.x, pos.y, width, height})) {
+    if (CheckCollisionPointRec(GetMousePosition(), (Rectangle){pos.x, pos.y, (float)width, (float)height})) {
         if (IsMouseButtonDown(MOUSE_LEFT_BUTTON)) {
             state = PRESSED;
         } else {
@@ -44,7 +44,7 @@ void Button::SetHold(bool value) {
 }
 
 void Button::Draw() {
-    DrawTextureRec(texture, (Rectangle){0, height * int(state), width, height}, pos, WHITE);
+    DrawTextureRec(texture, (Rectangle){0, height * float(state), (float)width, (float)height}, pos, WHITE);
 }
 
 

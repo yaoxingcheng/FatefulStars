@@ -320,6 +320,7 @@ PHYSACDEF PhysicsBody CreatePhysicsBodyPolygon(Vector2 pos, float radius, int si
     }
     else TRACELOG("[PHYSAC] Physics body could not be created, PHYSAC_MAX_BODIES reached\n");
 
+    body->tobeDeleted = false;
     return body;
 }
 
@@ -623,9 +624,9 @@ PHYSACDEF void DestroyPhysicsBody(PhysicsBody body)
         }
 
         // Free body allocated memory
-        PHYSAC_FREE(body);
-        usedMemory -= sizeof(PhysicsBodyData);
-        bodies[index] = NULL;
+//        PHYSAC_FREE(body);
+//        usedMemory -= sizeof(PhysicsBodyData);
+//        bodies[index] = NULL;
 
         // Reorder physics bodies pointers array and its catched index
         for (unsigned int i = index; i < physicsBodiesCount; i++)
@@ -843,11 +844,26 @@ void UpdatePhysicsStep(void)
                     {
 
                         PhysicsBody BreakBody = bodyB;
+
+                        if(!bodyA->holded and !bodyB->holded and bodyA->id != 0 and bodyB->id != 0 and bodyA->sides == bodyB->sides) {
+                            if(bodyA->twinID != bodyB->id) {
+                                bodyA->tobeDeleted = true;
+                                bodyB->tobeDeleted = true;
+                                bodyA->holded = true;
+                                bodyB->holded = true;
+                            }
+                        }
+
+
                         if(bodyA->holded != true and bodyB->holded != true and BreakBody->breakable and BreakBody->id != 0 and bodyA->id != 0){
 
                             PhysicsBody body = CreatePhysicsBodyPolygon(BreakBody->position, BreakBody->shape.radius, BreakBody->sides, BreakBody->density);
+                            body->twinID = BreakBody->id;
+                            BreakBody->twinID = body->id;
                             BreakBody->breakable = false;
                             body->breakable = false;
+                            body->holded = false;
+                            body->tobeDeleted = false;
                             bodyB->breakable = false;
                             printf("BODY: %d %f %f %f %f %f\n", BreakBody->id,  BreakBody->position.x, BreakBody->position.y, BreakBody->shape.radius, BreakBody->sides, BreakBody->density);
 
@@ -879,6 +895,11 @@ void UpdatePhysicsStep(void)
             }
         }
     }
+
+
+    for (int i = physicsBodiesCount-1; i >=0 ; i--)
+        if (bodies[i]->tobeDeleted)
+            DestroyPhysicsBody(bodies[i]);
 
     // Integrate forces to physics bodies
     for (unsigned int i = 0; i < physicsBodiesCount; i++)

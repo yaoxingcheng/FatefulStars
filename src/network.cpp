@@ -22,7 +22,7 @@ void NetworkManager::Init() {
     buffer = new char[BUFFER_SIZE];
 
     int padding = 20;
-    Vector2 btnPos((Vector2){game->screenWidth - padding - 60, padding});
+    Vector2 btnPos((Vector2){(float)game->screenWidth - padding - 60, (float)padding});
     mainBtn = new Button(game, "resources/btn/network1.png");
     mainBtn->SetPosition(btnPos);
     mainBtn2 = new Button(game, "resources/btn/network2.png");
@@ -35,10 +35,10 @@ void NetworkManager::Init() {
 
     int W = game->screenWidth;
     int H = game->screenHeight;
-    textInput = new TextInput(game, (Rectangle){int(0.24 * W), int(0.33 * H), int(0.55 * W), int(0.08 * H)});
+    textInput = new TextInput(game, (Rectangle){0.24f * W, 0.33f * H, 0.55f * W, 0.08f * H});
     textInput->SetPlaceholder("Enter [ip]:[port]");
 
-    actionBtn->SetPosition((Vector2){int(0.29 * W), int(0.54 * H)});
+    actionBtn->SetPosition((Vector2){0.29f * W, 0.54f * H});
 }
 
 void NetworkManager::Update() {
@@ -181,7 +181,7 @@ void NetworkManager::StartServer(int port) {
     sockaddr.sin_family = AF_INET;
     sockaddr.sin_port = htons(port);
     sockaddr.sin_addr.s_addr = htonl(INADDR_ANY);
-    if (bind(sockfd, (struct sockaddr*)&sockaddr, sizeof(sockaddr)) < 0) {
+    if (::bind(sockfd, (const struct sockaddr*)&sockaddr, sizeof(sockaddr)) < 0) {
         close(sockfd);
         stopConnections();
         return;

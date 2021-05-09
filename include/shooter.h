@@ -12,8 +12,14 @@ public:
     ~Shooter();
 
     void SetCursorX(int);
+    void SetNextSides(int);
+    void SetEnergy(int);
+    void SetReleased(int);
     void Update();
     void Draw();
+    int GetNextSides(){
+        return next_sides;
+    }
 
 private:
     Game* game;
@@ -27,8 +33,13 @@ private:
     void createNewBody();
     void destroyBody();
     void drawBody();
+    void drawShooter();
+    void drawText();
     Vector2 getHoldPosition();
     int cursorX;
+    int energy;
+    int released;
+    int next_sides;
 };
 
 #endif

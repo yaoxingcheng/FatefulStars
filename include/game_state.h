@@ -2,7 +2,10 @@
 #define __GAME_STATE_H__
 
 struct GameState {
-    int cursorX; 
+    int cursorX;
+    int energy;
+    int relased; 
+    int next_sides;
 };
 
 #endif

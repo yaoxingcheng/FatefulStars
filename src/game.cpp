@@ -5,6 +5,7 @@
 #include "network.h"
 
 Game::Game() {
+    scene = MAIN;
     planet = new Planet(this);
     shooter = new Shooter(this, UP, ball_radius, ball_dense);
     oppositeShooter = new Shooter(this, DOWN, ball_radius, ball_dense);
@@ -80,8 +81,14 @@ Planet* Game::GetPlanet(void) {
 }
 void Game::LoadState(const GameState *state) {
     oppositeShooter->SetCursorX(state->cursorX);
+    oppositeShooter->SetEnergy(state->energy);
+    oppositeShooter->SetReleased(state->relased);
+    oppositeShooter->SetNextSides(state->next_sides);
 }
 
 void Game::DumpState(GameState *state) {
     state->cursorX = input->GetCursorX();
+    state->energy = input->GetEnergy();
+    state->relased = int(IsMouseButtonReleased(MOUSE_LEFT_BUTTON));
+    state->next_sides = shooter->GetNextSides();
 }

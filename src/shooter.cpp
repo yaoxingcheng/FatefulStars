@@ -16,6 +16,10 @@ Shooter::Shooter(Game* game, ShooterPosition pos, float ball_radius, float ball_
     shooter_body = CreatePhysicsBodyCircle((Vector2){cx, cy}, game->shooter_radius, game->shooter_dense);
     shooter_body->enabled = false;
     shooter_body->holded = true;
+    cursorX = int(0.5f * L);
+    energy = 0;
+    released = 0;
+    next_sides = GetRandomValue(game->min_sides, game->max_sides);
 }
 
 Shooter::~Shooter() {
@@ -25,7 +29,7 @@ Shooter::~Shooter() {
 float Shooter::getX() {
     int L = std::min(game->screenWidth, game->screenHeight);
     InputController* input = game->GetInput();
-    float cx = pos == UP ? input->GetCursorX() : 0.5f * L;
+    float cx = pos == UP ? input->GetCursorX() : cursorX;
     return cx;
 }
 
@@ -42,7 +46,8 @@ Vector2 Shooter::getHoldPosition() {
 void Shooter::createNewBody() {
     float cx = getX();
     float cy = getY();
-    holded_body = CreatePhysicsBodyPolygon((Vector2){cx, cy}, ball_radius, GetRandomValue(3, 8), ball_dense);
+    holded_body = CreatePhysicsBodyPolygon((Vector2){cx, cy}, ball_radius, next_sides, ball_dense);
+    if (pos == UP) next_sides = GetRandomValue(game->min_sides, game->max_sides);
     holded_body->enabled = false;
     holded_body->breakable = false;
     holded_body->holded = true;
@@ -65,24 +70,23 @@ void Shooter::Update() {
     shooter_body->position = (Vector2){cx, cy};
     UpdatePhysics(); 
     if (holded_body == NULL) createNewBody();
-    if (pos == UP) {
-        InputController* input = game->GetInput();
-        input->SetEnergy(std::min(input->GetEnergy(), 500));
-        int energy = input->GetEnergy();
-        if (IsMouseButtonReleased(MOUSE_LEFT_BUTTON)) {
-            PhysicsBody body = GetPhysicsBodyByID(holded_body->id);
-            Planet* planet = game->GetPlanet();
-            body->enabled = true;
-            float velocity_direction = pos == UP ? 1 : -1;
-            body->position.y += (game->shooter_radius + 0.1) * velocity_direction;
-            body->velocity = (Vector2){0, velocity_direction * sqrtf(float(energy) * body->inverseMass)};
-            std::cout<<"if this holded body is breakable: "<<body->breakable<<std::endl;
-            AddLocalGravity(body, planet->GetBody(), game->pull_coef);
-            createNewBody();
+    InputController* input = game->GetInput();
+    if (pos == UP) input->SetEnergy(std::min(input->GetEnergy(), 500));
+    int last_energy = pos == UP ? input->GetEnergy():energy;
+    int is_released = pos == UP ? IsMouseButtonReleased(MOUSE_LEFT_BUTTON):released;
+    if (is_released != 0) {
+        PhysicsBody body = GetPhysicsBodyByID(holded_body->id);
+        Planet* planet = game->GetPlanet();
+        body->enabled = true;
+        float velocity_direction = pos == UP ? 1 : -1;
+        body->position.y += (game->shooter_radius + 0.1) * velocity_direction;
+        body->velocity = (Vector2){0, velocity_direction * sqrtf(float(energy) * body->inverseMass)};
+        std::cout<<"if this holded body is breakable: "<<body->breakable<<std::endl;
+        AddLocalGravity(body, planet->GetBody(), game->pull_coef);
+        createNewBody();
 
-            body->breakable = true;
-            body->holded = false;
-        }
+        body->breakable = true;
+        body->holded = false;
     }
     
 }
@@ -126,23 +130,41 @@ void Shooter::drawBody() {
         }
 }
 
-void Shooter::Draw() {
-    if (pos == DOWN && !game->IsMultiPlayer()) return;
+void Shooter::drawShooter() {
+    float cx = getX();
+    float cy = getY();
+    DrawCircleV((Vector2){cx,cy}, game->shooter_radius, WHITE); 
+}
 
-    int L = std::min(game->screenWidth, game->screenHeight);
-
+void Shooter::drawText() {
     InputController* input = game->GetInput();
-    float cx = pos == UP ? input->GetCursorX() : cursorX;
-    float startY = (pos == UP ? 0.03f : 0.97f) * L;
-    float endY = (pos == UP ? 0.1f : 0.9f) * L;
-    DrawLineEx((Vector2){cx - 0.1f * L, startY}, (Vector2){cx - 0.02f * L, endY}, 3, WHITE);
-    DrawLineEx((Vector2){cx + 0.1f * L, startY}, (Vector2){cx + 0.02f * L, endY}, 3, WHITE); 
-
+    int L = std::min(game->screenWidth, game->screenHeight);
     if (pos == UP) {
         DrawText(std::to_string(input->GetEnergy()).c_str(), 0.02f * L, 0.02f * L, 48, WHITE);
+    } else {
+        DrawText(std::to_string(energy).c_str(), 0.98f * L, 0.98f * L, 48, WHITE);
     }
+}
+
+void Shooter::Draw() {
+    if (pos == DOWN && !game->IsMultiPlayer()) return;
+    drawShooter();
+    if (pos == UP) drawBody();
+    drawText();
 }
 
 void Shooter::SetCursorX(int value) {
     cursorX = value;
+}
+
+void Shooter::SetEnergy(int value) {
+    energy = value;
+}
+
+void Shooter::SetReleased(int value) {
+    released = value;
+}
+
+void Shooter::SetNextSides(int value) {
+    next_sides = value;
 }
