@@ -4,6 +4,7 @@
 #include "input.h"
 #include "network.h"
 #include "anim.h"
+#include "audio.h"
 
 Game::Game() {
     scene = WELCOME;
@@ -13,6 +14,7 @@ Game::Game() {
     input = new InputController(this);
     networkManager = new NetworkManager(this);
     welcomeAnim = new WelcomeAnimation(this);
+    audios = new AudioController();
 }
 
 Game::~Game() {

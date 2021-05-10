@@ -20,6 +20,7 @@ class Shooter;
 class InputController;
 class NetworkManager;
 class WelcomeAnimation;
+class AudioController;
 
 class Game {
 public:
@@ -67,6 +68,7 @@ private:
     InputController *input;
     NetworkManager* networkManager;
     WelcomeAnimation* welcomeAnim;
+    AudioController* audios;
     int resetTime = 0;
     int resetTimeNow = 0;
 
