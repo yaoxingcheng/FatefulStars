@@ -1,7 +1,9 @@
 #include "game.h"
 #include "audio.h"
+#include <cstdio>
 
 AudioController::AudioController() {
+    InitAudioDevice();
     bgm = LoadSound("resources/mc.mp3");
     shoot = LoadSound("resources/fashe.mp3");
     collide = LoadSound("resources/zhuang.mp3");
