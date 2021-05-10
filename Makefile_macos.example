@@ -1,0 +1,18 @@
+CXX = g++
+CXXFLAGS = -Wall -std=c++11 -D_DEFAULT_SOURCE -Wno-missing-braces -s -O2 -D_DEFAULT_SOURCE -I/usr/local/include -I./include -I./include/external -framework CoreVideo -framework IOKit -framework Cocoa -framework GLUT -framework OpenGL
+SRCS = $(wildcard src/*.cpp)
+OBJS = $(SRCS:.cpp=.o)
+
+.PHONY: run clean
+
+run: game
+	./game
+
+game: $(OBJS) libraylib.a
+	$(CXX) -o $@ $^ $(CXXFLAGS)
+
+%.o: %.cpp
+	$(CXX) -o $@ $^ $(CXXFLAGS) -c
+
+clean:
+	rm -f $(OBJS) game
