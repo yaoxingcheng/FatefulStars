@@ -13,7 +13,10 @@ cp Makefile_linux.example Makefile
 make
 ```
 
-which yields the `game` binary in the root directory of the project. Enjoy it!
+which yields the `game` binary in the root directory of the project. Start our game by running the binary file
+```bash
+./game
+```
 
 ### For MacOS
 
