@@ -1,8 +1,9 @@
 #include "game.h"
 
+
 int main(void) {
     Game *g = new Game();
-    InitWindow(g->screenWidth, g->screenHeight, "Game");
+    InitWindow(g->screenWidth, g->screenHeight, "Fateful Stars");
     InitPhysics();
     g->InitGame();
 

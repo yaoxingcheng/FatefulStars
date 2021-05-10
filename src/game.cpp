@@ -72,6 +72,7 @@ void Game::UpdateGame(void) {
             oppositeShooter->Update();
         }
 
+        audios->Update();
         networkManager->Update();
     }
 }
@@ -137,4 +138,8 @@ void Game::DumpState(GameState *state) {
 
 int Game::GetScore() {
     return shooter->GetScore();
+}
+
+AudioController* Game::GetAudio() {
+    return audios;
 }

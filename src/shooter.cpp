@@ -7,6 +7,7 @@
 #include <iostream>
 #include <cmath>
 #include "drawgeo.h"
+#include "audio.h"
 using namespace std;
 
 Shooter::Shooter(Game* game, ShooterPosition pos, float ball_radius, float ball_dense) : game(game), pos(pos), ball_radius(ball_radius), ball_dense(ball_dense) {
@@ -80,8 +81,13 @@ void Shooter::Update() {
     int bodiesCount = GetPhysicsBodiesCount();
     if (pos == UP) {
         UpdatePhysics();
-        int delta = std::max(0, bodiesCount - GetPhysicsBodiesCount());
-        score += delta;
+        int delta = bodiesCount - GetPhysicsBodiesCount();
+        if (delta > 0) {
+            score += delta;
+            game->GetAudio()->Collide();
+        } else if (delta < 0) {
+            game->GetAudio()->Destroy();
+        }
     } 
     if (holded_body == NULL) createNewBody();
     InputController* input = game->GetInput();
@@ -90,6 +96,7 @@ void Shooter::Update() {
     if (pos == UP) energy = last_energy;
     int is_released = pos == UP ? IsMouseButtonReleased(MOUSE_LEFT_BUTTON): int(num_shot > current_shot);
     if (is_released != 0) {
+        game->GetAudio()->Shoot();
         PhysicsBody body = GetPhysicsBodyByID(holded_body->id);
         Planet* planet = game->GetPlanet();
         body->enabled = true;
@@ -161,11 +168,11 @@ void Shooter::drawText() {
 
     int L = std::min(game->screenWidth, game->screenHeight);
     if (pos == UP) {
-        DrawText(std::to_string(input->GetEnergy()).c_str(), 0.02f * L, 0.02f * L, 48, WHITE);
-        DrawText(std::to_string(score).c_str(), 0.15f * L, 0.02f * L, 48, WHITE);
-    } else {
-        DrawText(std::to_string(energy).c_str(), 0.98f * L, 0.98f * L, 48, WHITE);
-    }
+        DrawText("Score", 0.04f * L, 0.03f * L, 24, WHITE);
+        DrawText(std::to_string(score).c_str(), 0.16f * L, 0.024f * L, 32, WHITE);
+        DrawText("Power", 0.04f * L, 0.08f * L, 24, WHITE);
+        DrawText(std::to_string(input->GetEnergy()).c_str(), 0.16f * L, 0.075f * L, 32, WHITE);
+    } 
 }
 
 void Shooter::Draw() {
