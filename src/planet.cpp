@@ -73,7 +73,7 @@ int Planet::GetID() {
 }
 
 void Planet::nextScene() {
-    if (scene_time < 0) {
+    if (scene_time < 0 && scene_id < 4) {
         scene_id += 1;
         scene_time = 0;
         scene_cost = calcSceneCost(scene_id);
@@ -121,7 +121,6 @@ void Planet::DrawBall() {
             alpha = alpha * (scene_cost - scene_time) / SCENE_ANIMATION_FRAMES;
         }
         DrawRectangle(0, 0, game->screenWidth, game->screenHeight, Fade(BLACK, alpha));
-
         if (scene_cd == 0) {
             char c;
             if (scene_line == 0 && scene_pos == 0) {
@@ -145,9 +144,11 @@ void Planet::DrawBall() {
                 if (!isblank(c)) break;
             }
         }
-        for (int i = 0; i < 2; ++i) {
-            for (int j = 0; j < 3; ++j) {
-                DrawText(disp[i][j], 200, 150 + i * 385 + j * 36, SCENE_FONT_SIZE, WHITE);
+        if (!(scene_cost - scene_time <= SCENE_ANIMATION_FRAMES / 2)) {
+            for (int i = 0; i < 2; ++i) {
+                for (int j = 0; j < 3; ++j) {
+                    DrawText(disp[i][j], 200, 150 + i * 400 + j * 36, SCENE_FONT_SIZE, WHITE);
+                }
             }
         }
         if (scene_cd == 0) {

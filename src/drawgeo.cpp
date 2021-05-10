@@ -1,31 +1,42 @@
 #include "game.h"
 #include "drawgeo.h"
+#include "raylib.h"
+#include "physac.h"
+#include <bits/stdc++.h>
+using namespace std;
+
+#define pi 3.141592653
+
+void Pic::Init(string s, Vector2 imh, float imR, float ang, Color col) {
+    imageheart = imh;
+    imageR = imR;
+    angular = ang;
+    color = col;
+
+    const int orgsize = 325;
+    image = LoadImage(s.c_str());
+    ImageCrop(&image,{0, 0, orgsize, orgsize});
+
+    textureR = 30;
+    float rat = textureR/imageR;
+    ImageResize(&image,(int)(rat*orgsize),(int)(rat*orgsize));
+    texture = LoadTextureFromImage(image);
+    textureheart = {imageheart.x*rat, imageheart.y*rat};
+}
+
+void Pic::Print(Vector2 centroid, float rotation) {
+    rotation += angular;
+    float texturebias = rotation + (atan2(textureheart.y, textureheart.x)/pi*180);
+    float r = sqrt(pow(textureheart.x,2) + pow(textureheart.y,2));
+    DrawTextureEx(texture,{centroid.x - r * cos(texturebias/180*pi), centroid.y - r * sin(texturebias/180*pi)},rotation,1,color);
+}
 
 DrawGeo::DrawGeo() {
-    const int orgsize = 325;
-
-    images[0] = LoadImage("resources/tmp-cir.png");
-    ImageCrop(&images[0],{0, 0, orgsize, orgsize});
-    imheart[0] = {165, 172}; imR[0] = 118; angulars[0] = 0;
-
-    images[3] = LoadImage("resources/tmp-tra.png");
-    ImageCrop(&images[3],{0, 0, orgsize, orgsize});
-    imheart[3] = {176, 194}; imR[3] = 157; angulars[3] = 0;
-
-    images[4] = LoadImage("resources/tmp-rec.png");
-    ImageCrop(&images[4],{0, 0, orgsize, orgsize});
-    imheart[4] = {167, 157}; imR[4] = 138; angulars[4] = 45;
-
-    teR = 30;
-    // printf("fweaonfoawiefnweaif\n\n\n\n\n\n\n\n\n"); fflush(stdout);
-    for (int i = 0; i < 10; ++i){
-        if (imR[i]<0.5) continue;
-        float rat = teR/imR[i];
-        ImageResize(&images[i],(int)(rat*orgsize),(int)(rat*orgsize));
-        textures[i] = LoadTextureFromImage(images[i]);
-        teheart[i] = {imheart[i].x*rat, imheart[i].y*rat};
-    }
-    // printf("oewigjnoerfnafdes\n\n\n\n\n\n\n\n\n"); fflush(stdout);
+    pic[0].Init("resources/tmp-cir.png",{164,163},118,0,BLUE);
+    pic[3].Init("resources/tmp-tra.png",{176,194},157,0,WHITE);
+    pic[4].Init("resources/tmp-rec.png",{167,157},138,45,VIOLET);
+    pic[5].Init("resources/tmp-pen.png",{164,160},112,0,GREEN);
+    // CLITERAL(Color){ 255, 255, 255, 255 }
 }
 
 DrawGeo::~DrawGeo() {
@@ -35,14 +46,12 @@ DrawGeo::~DrawGeo() {
 void DrawGeo::DrawPolygon(int len, Vector2 *vectors) {
     // return;
     Vector2 o = {0.,0.};
-    for (int i=0;i<len;++i){
-        o.x+=vectors[i].x/len;
-        o.y+=vectors[i].y/len;
+    for (int i = 0; i < len; ++ i){
+        o.x += vectors[i].x / len;
+        o.y += vectors[i].y / len;
     }
-    if (len == 6||1) {
-        int i = 0;
-        // float rot = 
-        DrawTextureEx(textures[i],{o.x-teheart[i].x,o.y-teheart[i].y},0,1,CLITERAL(Color){ 255, 255, 255, 255 });
-    }
+    Vector2 v = {vectors[0].x - o.x, vectors[0].y - o.y};
+    float rot = atan2(v.y,v.x)/pi*180 + 90;
+    int who = len >= 6? 0: len;
+    pic[who].Print(o,rot);
 }
-

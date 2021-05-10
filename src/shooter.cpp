@@ -140,10 +140,10 @@ void Shooter::drawBody() {
                     Vector2 vertexA = GetPhysicsShapeVertex(body, j);
                     vectors[j] = vertexA;
 
-                    int jj = (((j + 1) < vertexCount) ? (j + 1) : 0);   // Get next vertex or first to close the shape
-                    Vector2 vertexB = GetPhysicsShapeVertex(body, jj);
+                    // int jj = (((j + 1) < vertexCount) ? (j + 1) : 0);   // Get next vertex or first to close the shape
+                    // Vector2 vertexB = GetPhysicsShapeVertex(body, jj);
 
-                    DrawLineEx(vertexA, vertexB, 3, DARKBLUE);     // Draw a line between two vertex positions
+                    // DrawLineEx(vertexA, vertexB, 3, DARKBLUE);     // Draw a line between two vertex positions
                 }
                 drawgeo->DrawPolygon(vertexCount, vectors);
             }

@@ -2,19 +2,31 @@
 #define __DRAWGEO_H__
 
 #include "physac.h"
+#include <string>
+using std::string;
+
+class Pic {
+public:
+    void Init(string s, Vector2 imh, float imR, float ang, Color color);
+    void Print(Vector2 centroid, float rotation);
+
+private:
+    Image image;
+    Texture2D texture;
+    Vector2 imageheart, textureheart;
+    float imageR, textureR, angular;
+    Color color;
+};
 
 class DrawGeo {
 public:
     DrawGeo();
     ~DrawGeo();
 
-    void DrawPolygon(int len, Vector2 *vectors);
+    void DrawPolygon(int counts, Vector2 *vectors);
 
 private:
-    Image images[10];
-    Texture2D textures[10];
-    Vector2 imheart[10], teheart[10];
-    float imR[10], teR, angulars[10];
+    Pic pic[10];
 };
 
 #endif
