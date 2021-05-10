@@ -9,7 +9,6 @@ AudioController::AudioController() {
     collide = LoadSound("resources/zhuang.mp3");
     destroy = LoadSound("resources/posui.mp3");
     PlaySound(bgm);
-    printf("feaifewnfoeiwfnwei\n\n\n\n\n\n\n");
 }
 
 AudioController::~AudioController() {
