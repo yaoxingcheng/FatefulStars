@@ -90,6 +90,7 @@ void Game::DrawGame(void) {
             shooter->Draw();
             oppositeShooter->Draw();
             networkManager->DrawMainButton();
+            planet->DrawBall();
         } else if (scene == NETWORK_SETTINGS) {
             networkManager->DrawSettingsPanel();
         }
@@ -130,4 +131,8 @@ void Game::DumpState(GameState *state) {
     state->energy = shooter->GetEnergy();
     state->num_shot = shooter->GetCurrentShot();
     state->next_sides = shooter->GetNumSides();
+}
+
+int Game::GetScore() {
+    return shooter->GetScore();
 }

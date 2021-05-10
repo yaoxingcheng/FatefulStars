@@ -33,6 +33,9 @@ public:
     int GetEnergy(){
         return energy;
     }
+    int GetScore() {
+        return score;
+    }
 
 private:
     Game* game;

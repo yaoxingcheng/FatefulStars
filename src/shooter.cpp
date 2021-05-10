@@ -166,8 +166,6 @@ void Shooter::drawText() {
     } else {
         DrawText(std::to_string(energy).c_str(), 0.98f * L, 0.98f * L, 48, WHITE);
     }
-
-    DrawRectangle(0, 0, game->screenWidth, game->screenHeight, Fade(BLACK, 0.8));
 }
 
 void Shooter::Draw() {

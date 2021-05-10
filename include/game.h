@@ -51,7 +51,7 @@ public:
     bool IsMultiPlayer(void);
     InputController* GetInput(void);
     Planet* GetPlanet(void);
-    
+    int GetScore(void);
 
     Scene GetScene();
     void SetScene(Scene);
