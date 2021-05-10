@@ -21,6 +21,10 @@ void WelcomeAnimation::Update() {
 
 void WelcomeAnimation::Draw() {
     DrawTexture(texture, 0, 0, Fade(WHITE, 1.0f - 1.0f * std::min(std::max(game->framesCounter, 0) - DURATION, ANIMATION) / ANIMATION));
+
+    if (game->framesCounter < DURATION) {
+        DrawText("Fateful Stars", 250, 180, 66, WHITE);
+    }
 }
 
 bool WelcomeAnimation::ShouldRender() {

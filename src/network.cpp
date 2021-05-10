@@ -20,7 +20,7 @@ NetworkManager::~NetworkManager() {
 
 void NetworkManager::Init() {
     int padding = 20;
-    Vector2 btnPos((Vector2){(float)game->screenWidth - padding - 60, (float)padding});
+    Vector2 btnPos((Vector2){(float)game->screenWidth - padding - 60, 20});
     mainBtn = new Button(game, "resources/btn/network1.png");
     mainBtn->SetPosition(btnPos);
     mainBtn2 = new Button(game, "resources/btn/network2.png");

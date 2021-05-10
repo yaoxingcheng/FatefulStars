@@ -161,11 +161,11 @@ void Shooter::drawText() {
 
     int L = std::min(game->screenWidth, game->screenHeight);
     if (pos == UP) {
-        DrawText(std::to_string(input->GetEnergy()).c_str(), 0.02f * L, 0.02f * L, 48, WHITE);
-        DrawText(std::to_string(score).c_str(), 0.15f * L, 0.02f * L, 48, WHITE);
-    } else {
-        DrawText(std::to_string(energy).c_str(), 0.98f * L, 0.98f * L, 48, WHITE);
-    }
+        DrawText("Score", 0.04f * L, 0.03f * L, 24, WHITE);
+        DrawText(std::to_string(score).c_str(), 0.16f * L, 0.024f * L, 32, WHITE);
+        DrawText("Power", 0.04f * L, 0.08f * L, 24, WHITE);
+        DrawText(std::to_string(input->GetEnergy()).c_str(), 0.16f * L, 0.075f * L, 32, WHITE);
+    } 
 }
 
 void Shooter::Draw() {

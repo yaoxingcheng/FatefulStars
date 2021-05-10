@@ -1,5 +1,6 @@
 #include "game.h"
 
+
 int main(void) {
     Game *g = new Game();
     InitWindow(g->screenWidth, g->screenHeight, "Game");
