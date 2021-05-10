@@ -201,7 +201,6 @@ void NetworkManager::StartServer(int port) {
             close(conn);
             close(sockfd);
         }
-        printf("Accept connection: %d\n", conn);
         startCoummunication(conn);
     });
 

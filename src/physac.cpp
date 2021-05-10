@@ -6,7 +6,6 @@
 #include "shooter.h"
 
 // Support TRACELOG macros
-#define PHYSAC_DEBUG
 #if defined(PHYSAC_DEBUG)
     #include <stdio.h>              // Required for: printf()
     #define TRACELOG(...) printf(__VA_ARGS__)
@@ -865,7 +864,6 @@ void UpdatePhysicsStep(void)
                             body->holded = false;
                             body->tobeDeleted = false;
                             bodyB->breakable = false;
-                            printf("BODY: %d %f %f %f %f %f\n", BreakBody->id,  BreakBody->position.x, BreakBody->position.y, BreakBody->shape.radius, BreakBody->sides, BreakBody->density);
 
                             if (body != NULL){
                                 body->useGravity = false;
@@ -873,7 +871,7 @@ void UpdatePhysicsStep(void)
                                 int L = std::min(Game::screenWidth, Game::screenHeight);
                                 float x_position = L / 2;
                                 float y_position = L / 2;
-                                float radius = L / 8;
+                                float radius = 110;
                                 body->anchor = (Vector2){ x_position, y_position};
                                 body->anchorMass = radius*radius*3.1415926 * 100;
                                 body->anchorForce = Game::pull_coef;
