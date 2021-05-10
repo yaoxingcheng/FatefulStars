@@ -2,7 +2,7 @@
 #include "drawgeo.h"
 #include "raylib.h"
 #include "physac.h"
-#include <bits/stdc++.h>
+#include <string>
 using namespace std;
 
 #define pi 3.141592653
@@ -28,7 +28,7 @@ void Pic::Print(Vector2 centroid, float rotation) {
     rotation += angular;
     float texturebias = rotation + (atan2(textureheart.y, textureheart.x)/pi*180);
     float r = sqrt(pow(textureheart.x,2) + pow(textureheart.y,2));
-    DrawTextureEx(texture,{centroid.x - r * cos(texturebias/180*pi), centroid.y - r * sin(texturebias/180*pi)},rotation,1,color);
+    DrawTextureEx(texture,{centroid.x - r * (float)cos(texturebias/180*pi), centroid.y - r * (float)sin(texturebias/180*pi)},rotation,1,color);
 }
 
 DrawGeo::DrawGeo() {

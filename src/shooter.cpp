@@ -21,7 +21,7 @@ Shooter::Shooter(Game* game, ShooterPosition pos, float ball_radius, float ball_
     cursorX = int(0.5f * L);
     energy = 0;
     released = 0;
-    num_sides = GetRandomValue(game->min_sides, game->max_sides);
+    num_sides = 3;
     current_shot = 0;
     num_shot = 0;
 }
