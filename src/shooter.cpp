@@ -7,6 +7,7 @@
 #include <iostream>
 #include <cmath>
 #include "drawgeo.h"
+#include "audio.h"
 using namespace std;
 
 Shooter::Shooter(Game* game, ShooterPosition pos, float ball_radius, float ball_dense) : game(game), pos(pos), ball_radius(ball_radius), ball_dense(ball_dense) {
@@ -80,8 +81,13 @@ void Shooter::Update() {
     int bodiesCount = GetPhysicsBodiesCount();
     if (pos == UP) {
         UpdatePhysics();
-        int delta = std::max(0, bodiesCount - GetPhysicsBodiesCount());
-        score += delta;
+        int delta = bodiesCount - GetPhysicsBodiesCount();
+        if (delta > 0) {
+            score += delta;
+            game->GetAudio()->Collide();
+        } else if (delta < 0) {
+            game->GetAudio()->Destroy();
+        }
     } 
     if (holded_body == NULL) createNewBody();
     InputController* input = game->GetInput();
@@ -90,6 +96,7 @@ void Shooter::Update() {
     if (pos == UP) energy = last_energy;
     int is_released = pos == UP ? IsMouseButtonReleased(MOUSE_LEFT_BUTTON): int(num_shot > current_shot);
     if (is_released != 0) {
+        game->GetAudio()->Shoot();
         PhysicsBody body = GetPhysicsBodyByID(holded_body->id);
         Planet* planet = game->GetPlanet();
         body->enabled = true;

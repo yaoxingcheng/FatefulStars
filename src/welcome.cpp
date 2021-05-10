@@ -24,6 +24,7 @@ void WelcomeAnimation::Draw() {
 
     if (game->framesCounter < DURATION) {
         DrawText("Fateful Stars", 250, 180, 66, WHITE);
+        DrawText("by HYXR", 580, 265, 28, WHITE);
     }
 }
 

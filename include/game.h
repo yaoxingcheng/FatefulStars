@@ -59,7 +59,8 @@ public:
 
     void DumpState(GameState *state);
     void LoadState(const GameState *state);
-
+    AudioController* GetAudio();
+    
 private:
     Scene scene;
     Planet* planet;
