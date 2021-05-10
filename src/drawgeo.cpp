@@ -32,10 +32,14 @@ void Pic::Print(Vector2 centroid, float rotation) {
 }
 
 DrawGeo::DrawGeo() {
-    pic[0].Init("resources/tmp-cir.png",{164,163},118,0,BLUE);
-    pic[3].Init("resources/tmp-tra.png",{176,194},157,0,WHITE);
-    pic[4].Init("resources/tmp-rec.png",{167,157},138,45,VIOLET);
-    pic[5].Init("resources/tmp-pen.png",{164,160},112,0,GREEN);
+    Color mygreen = CLITERAL(Color){ 203, 255, 243, 255 };
+    Color myred   = CLITERAL(Color){ 255, 198, 188, 255 };
+    Color myyellow = CLITERAL(Color){ 255, 231, 169, 255 };
+    Color myorange = CLITERAL(Color){ 254, 182, 140, 255 };
+    pic[0].Init("resources/tmp-cir.png",{164,163},118,0,mygreen);
+    pic[3].Init("resources/tmp-tra.png",{176,194},157,0,myred);
+    pic[4].Init("resources/tmp-rec.png",{167,157},138,45,myyellow);
+    pic[5].Init("resources/tmp-pen.png",{164,160},112,0,myorange);
     // CLITERAL(Color){ 255, 255, 255, 255 }
 }
 
